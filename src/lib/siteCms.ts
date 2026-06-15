@@ -21,6 +21,7 @@ export interface PricelistPackage {
 	features: string[];
 	popular: boolean;
 	enabled: boolean;
+	sortOrder: number;
 }
 
 export interface UpdateSiteContentInput {
@@ -32,14 +33,39 @@ export interface UpdateSiteContentInput {
 	env?: RuntimeEnv;
 }
 
-export interface UpdatePricelistInput {
-	packages: PricelistPackage[];
+export interface PricelistInput {
+	id?: string;
+	name: string;
+	price: string;
+	features: string[];
+	popular: boolean;
+	enabled: boolean;
+	sortOrder: number;
+	env?: RuntimeEnv;
+}
+
+export interface UpdatePricelistInput extends PricelistInput {
+	originalId: string;
+}
+
+export interface DeletePricelistInput {
+	id: string;
 	env?: RuntimeEnv;
 }
 
 interface SiteContentRow {
 	key: string;
 	value: string;
+}
+
+interface PricelistRow {
+	id: string;
+	name: string;
+	price: string;
+	features_json: string;
+	popular: number;
+	enabled: number;
+	sort_order: number;
 }
 
 const defaultSiteContent: SiteContent = {
@@ -69,6 +95,7 @@ const defaultSiteContent: SiteContent = {
 			],
 			popular: false,
 			enabled: true,
+			sortOrder: 10,
 		},
 		{
 			id: 'premium',
@@ -80,6 +107,7 @@ const defaultSiteContent: SiteContent = {
 			],
 			popular: false,
 			enabled: true,
+			sortOrder: 20,
 		},
 		{
 			id: 'pertamax',
@@ -91,6 +119,7 @@ const defaultSiteContent: SiteContent = {
 			],
 			popular: true,
 			enabled: true,
+			sortOrder: 30,
 		},
 		{
 			id: 'exclusive',
@@ -103,6 +132,7 @@ const defaultSiteContent: SiteContent = {
 			],
 			popular: false,
 			enabled: true,
+			sortOrder: 40,
 		},
 	],
 	hasDb: false,
@@ -119,8 +149,10 @@ export async function getSiteContent(env?: RuntimeEnv): Promise<SiteContent> {
 
 	try {
 		await ensureSiteContentSchema(env.DB);
+		await ensurePricelistSchema(env.DB);
 		const result = await env.DB.prepare('select key, value from site_content').all<SiteContentRow>();
 		const values = Object.fromEntries((result.results || []).map((row) => [row.key, row.value]));
+		const pricelist = await readPricelistFromD1(env.DB, values.pricelist_json);
 
 		return {
 			heroTitle: values.hero_title || defaultSiteContent.heroTitle,
@@ -128,7 +160,7 @@ export async function getSiteContent(env?: RuntimeEnv): Promise<SiteContent> {
 			heroImage: values.hero_image || defaultSiteContent.heroImage,
 			aboutImage: values.about_image || defaultSiteContent.aboutImage,
 			aboutText: values.about_text || defaultSiteContent.aboutText,
-			pricelist: parsePricelist(values.pricelist_json),
+			pricelist,
 			hasDb: true,
 			hasBucket: Boolean(env.GALLERY_BUCKET),
 		};
@@ -163,12 +195,84 @@ export async function updateSiteContent(input: UpdateSiteContentInput): Promise<
 	]);
 }
 
-export async function updatePricelist(input: UpdatePricelistInput): Promise<void> {
-	if (!input.env?.DB) throw new Error('D1 binding DB belum tersedia.');
+export async function getPricelistPackages(env?: RuntimeEnv): Promise<PricelistPackage[]> {
+	if (!env?.DB) return defaultSiteContent.pricelist;
 
-	await ensureSiteContentSchema(input.env.DB);
-	const packages = normalizePricelist(input.packages);
-	await upsertContentValue(input.env.DB, 'pricelist_json', JSON.stringify(packages));
+	await ensureSiteContentSchema(env.DB);
+	await ensurePricelistSchema(env.DB);
+	const legacyJson = await env.DB.prepare('select value from site_content where key = ?')
+		.bind('pricelist_json')
+		.first<{ value: string }>();
+	return readPricelistFromD1(env.DB, legacyJson?.value);
+}
+
+export async function createPricelistPackage(input: PricelistInput): Promise<void> {
+	const db = await writablePricelistDb(input.env);
+	const pkg = normalizePricelistPackage(input);
+	if (await getPricelistPackageById(pkg.id, input.env)) throw new Error('Paket pricelist sudah ada.');
+
+	await db.prepare(`
+		insert into pricelist_packages (id, name, price, features_json, popular, enabled, sort_order, created_at, updated_at)
+		values (?, ?, ?, ?, ?, ?, ?, current_timestamp, current_timestamp)
+	`).bind(
+		pkg.id,
+		pkg.name,
+		pkg.price,
+		JSON.stringify(pkg.features),
+		pkg.popular ? 1 : 0,
+		pkg.enabled ? 1 : 0,
+		pkg.sortOrder,
+	).run();
+	await markPricelistInitialized(db);
+}
+
+export async function updatePricelistPackage(input: UpdatePricelistInput): Promise<void> {
+	const db = await writablePricelistDb(input.env);
+	const current = await getPricelistPackageById(input.originalId, input.env);
+	if (!current) throw new Error('Paket pricelist tidak ditemukan.');
+
+	const pkg = normalizePricelistPackage(input);
+	if (pkg.id !== input.originalId && await getPricelistPackageById(pkg.id, input.env)) {
+		throw new Error('Paket pricelist sudah ada.');
+	}
+
+	await db.prepare(`
+		update pricelist_packages
+		set id = ?, name = ?, price = ?, features_json = ?, popular = ?, enabled = ?, sort_order = ?, updated_at = current_timestamp
+		where id = ?
+	`).bind(
+		pkg.id,
+		pkg.name,
+		pkg.price,
+		JSON.stringify(pkg.features),
+		pkg.popular ? 1 : 0,
+		pkg.enabled ? 1 : 0,
+		pkg.sortOrder,
+		input.originalId,
+	).run();
+	await markPricelistInitialized(db);
+}
+
+export async function deletePricelistPackage(input: DeletePricelistInput): Promise<void> {
+	const db = await writablePricelistDb(input.env);
+	const current = await getPricelistPackageById(input.id, input.env);
+	if (!current) throw new Error('Paket pricelist tidak ditemukan.');
+
+	await db.prepare('delete from pricelist_packages where id = ?').bind(input.id).run();
+	await markPricelistInitialized(db);
+}
+
+export async function getPricelistPackageById(
+	id: string,
+	env?: RuntimeEnv,
+): Promise<PricelistPackage | null> {
+	if (!env?.DB) return defaultSiteContent.pricelist.find((pkg) => pkg.id === id) || null;
+
+	await ensurePricelistSchema(env.DB);
+	const row = await env.DB.prepare('select * from pricelist_packages where id = ?')
+		.bind(id)
+		.first<PricelistRow>();
+	return row ? toPricelistPackage(row) : null;
 }
 
 async function ensureSiteContentSchema(db: D1DatabaseLike): Promise<void> {
@@ -176,6 +280,22 @@ async function ensureSiteContentSchema(db: D1DatabaseLike): Promise<void> {
 		create table if not exists site_content (
 			key text primary key,
 			value text not null,
+			updated_at text not null default current_timestamp
+		)
+	`).run();
+}
+
+async function ensurePricelistSchema(db: D1DatabaseLike): Promise<void> {
+	await db.prepare(`
+		create table if not exists pricelist_packages (
+			id text primary key,
+			name text not null,
+			price text not null,
+			features_json text not null,
+			popular integer not null default 0,
+			enabled integer not null default 1,
+			sort_order integer not null default 0,
+			created_at text not null default current_timestamp,
 			updated_at text not null default current_timestamp
 		)
 	`).run();
@@ -259,6 +379,51 @@ function getErrorMessage(error: unknown): string {
 	return error instanceof Error ? error.message : 'Unknown error';
 }
 
+async function writablePricelistDb(env?: RuntimeEnv): Promise<D1DatabaseLike> {
+	if (!env?.DB) throw new Error('D1 binding DB belum tersedia.');
+
+	await ensureSiteContentSchema(env.DB);
+	await ensurePricelistSchema(env.DB);
+	return env.DB;
+}
+
+async function readPricelistFromD1(
+	db: D1DatabaseLike,
+	legacyJson: string | undefined,
+): Promise<PricelistPackage[]> {
+	const initialized = await db.prepare('select value from site_content where key = ?')
+		.bind('pricelist_initialized')
+		.first<{ value: string }>();
+	const result = await db.prepare('select * from pricelist_packages order by sort_order asc, name asc')
+		.all<PricelistRow>();
+	const rows = result.results || [];
+
+	if (rows.length > 0) return rows.map(toPricelistPackage);
+	if (initialized) return [];
+
+	const seedPackages = parsePricelist(legacyJson);
+	await Promise.all(seedPackages.map((pkg) =>
+		db.prepare(`
+			insert or ignore into pricelist_packages (id, name, price, features_json, popular, enabled, sort_order, created_at, updated_at)
+			values (?, ?, ?, ?, ?, ?, ?, current_timestamp, current_timestamp)
+		`).bind(
+			pkg.id,
+			pkg.name,
+			pkg.price,
+			JSON.stringify(pkg.features),
+			pkg.popular ? 1 : 0,
+			pkg.enabled ? 1 : 0,
+			pkg.sortOrder,
+		).run(),
+	));
+	await markPricelistInitialized(db);
+	return seedPackages;
+}
+
+async function markPricelistInitialized(db: D1DatabaseLike): Promise<void> {
+	await upsertContentValue(db, 'pricelist_initialized', '1');
+}
+
 function parsePricelist(value: string | undefined): PricelistPackage[] {
 	if (!value) return defaultSiteContent.pricelist;
 
@@ -291,9 +456,58 @@ function normalizePricelist(value: unknown): PricelistPackage[] {
 				features,
 				popular: Boolean(record.popular),
 				enabled: record.enabled !== false,
+				sortOrder: Number.isFinite(Number(record.sortOrder)) ? Number(record.sortOrder) : (index + 1) * 10,
 			};
 		})
 		.filter((item): item is PricelistPackage => Boolean(item));
 
 	return packages.length > 0 ? packages : defaultSiteContent.pricelist;
+}
+
+function normalizePricelistPackage(input: PricelistInput): PricelistPackage {
+	const id = slugify(input.id || input.name);
+	const name = input.name.trim();
+	const price = input.price.trim();
+	const features = input.features.map((feature) => feature.trim()).filter(Boolean);
+	const sortOrder = Number.isFinite(Number(input.sortOrder)) ? Number(input.sortOrder) : 0;
+
+	if (!id) throw new Error('ID paket wajib diisi.');
+	if (!name) throw new Error('Nama paket wajib diisi.');
+	if (!price) throw new Error('Harga paket wajib diisi.');
+	if (features.length === 0) throw new Error('Minimal satu fitur wajib diisi.');
+
+	return {
+		id,
+		name,
+		price,
+		features,
+		popular: input.popular,
+		enabled: input.enabled,
+		sortOrder,
+	};
+}
+
+function toPricelistPackage(row: PricelistRow): PricelistPackage {
+	return {
+		id: row.id,
+		name: row.name,
+		price: row.price,
+		features: parseFeatures(row.features_json),
+		popular: Boolean(row.popular),
+		enabled: Boolean(row.enabled),
+		sortOrder: row.sort_order,
+	};
+}
+
+function parseFeatures(value: string): string[] {
+	try {
+		const features = JSON.parse(value);
+		if (Array.isArray(features)) {
+			return features.map((feature) => String(feature).trim()).filter(Boolean);
+		}
+	} catch {
+		// Fall through to newline parser for manually repaired records.
+	}
+
+	return value.split(/\r?\n/).map((feature) => feature.trim()).filter(Boolean);
 }

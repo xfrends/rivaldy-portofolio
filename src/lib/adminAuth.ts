@@ -1,5 +1,5 @@
 import type { AstroCookies } from 'astro';
-import { getEnvString, type RuntimeEnv } from './cloudflare';
+import { getAppConfig, type RuntimeEnv } from './cloudflare';
 
 const cookieName = 'rivaldy_admin_session';
 const defaultAdminUsername = 'admin';
@@ -75,15 +75,15 @@ async function sign(payload: string, env?: RuntimeEnv): Promise<string> {
 }
 
 export function getAdminUsername(env?: RuntimeEnv): string {
-	return getEnvString(env, 'ADMIN_USERNAME').trim() || defaultAdminUsername;
+	return getAppConfig(env).adminUsername || defaultAdminUsername;
 }
 
 function getAdminPassword(env?: RuntimeEnv): string {
-	return getEnvString(env, 'ADMIN_PASSWORD').trim();
+	return getAppConfig(env).adminPassword;
 }
 
 function getSessionSecret(env?: RuntimeEnv): string {
-	return getEnvString(env, 'ADMIN_SESSION_SECRET').trim() || getAdminPassword(env);
+	return getAppConfig(env).adminSessionSecret;
 }
 
 function safeEqual(a: string, b: string): boolean {

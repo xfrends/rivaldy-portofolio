@@ -20,7 +20,7 @@ Proyek ini dapat di-deploy secara gratis ke Cloudflare Pages. Ikuti langkah-lang
    - **Framework preset**: `Astro`
    - **Build command**: `npm run build`
    - **Build output directory**: `dist`
-7. *(Opsional - Hanya jika Anda menggunakan fitur Admin CMS)* Klik **Environment variables (advanced)** dan tambahkan:
+7. *(Opsional - Hanya jika Anda menggunakan fitur Admin CMS)* Klik **Variables and secrets** dan tambahkan sebagai **Secret**:
    - `ADMIN_PASSWORD`: password rahasia admin
    - `ADMIN_USERNAME`: opsional, default `admin`
    - `ADMIN_SESSION_SECRET`: opsional, default memakai `ADMIN_PASSWORD`
@@ -30,14 +30,16 @@ Proyek ini dapat di-deploy secara gratis ke Cloudflare Pages. Ikuti langkah-lang
 ### Pengaturan Lanjutan (Jika Menggunakan Admin CMS)
 Jika Anda ingin bisa mengunggah foto melalui halaman `/admin` langsung dari HP/Web, atur penyimpanan (Storage) Cloudflare berikut:
 
-#### Environment Variables
+#### Environment Variables / Secrets
 Salin `.env.example` menjadi `.env` untuk development lokal:
 
 ```bash
 cp .env.example .env
 ```
 
-Isi yang wajib:
+Untuk lokal, isi `.env`. Untuk Cloudflare Pages, buat key yang sama di **Settings > Variables and secrets** dengan tipe **Secret**. Kode akan membaca `.env` saat local development dan membaca runtime secret dari Cloudflare saat production.
+
+Isi yang dipakai:
 
 | Key | Dipakai untuk | Contoh |
 | --- | --- | --- |
@@ -56,7 +58,7 @@ Key referensi resource Cloudflare di `.env.example`:
 | `CLOUDFLARE_KV_SESSION_NAMESPACE_ID` | ID KV namespace untuk session Astro |
 | `CLOUDFLARE_KV_ANALYTICS_NAMESPACE_ID` | ID KV namespace untuk dashboard analytics |
 
-Catatan: binding runtime Cloudflare tidak dibaca dari `.env`. Untuk deploy via Cloudflare Pages dari Git, buat binding di **Cloudflare Pages Settings > Functions**. Jangan commit placeholder ID binding ke `wrangler.jsonc`, karena Cloudflare akan memvalidasi file itu saat deploy.
+Catatan: binding storage Cloudflare seperti D1, R2, dan KV tidak dibaca dari `.env`. Untuk deploy via Cloudflare Pages dari Git, buat binding di **Cloudflare Pages Settings > Functions**. Jangan commit placeholder ID binding ke `wrangler.jsonc`, karena Cloudflare akan memvalidasi file itu saat deploy.
 
 #### Cloudflare Bindings
 1. Buka kembali pengaturan proyek Pages Anda di Cloudflare.
@@ -94,7 +96,7 @@ npm run preview:pages
 
 - **Admin CMS**: buka `/admin`, lalu kelola data dari menu Dashboard, Content, Pricelist, Collections, dan Posts.
 - **Content**: hero title, hero tagline, hero image, about image, dan about text disimpan di Cloudflare D1 melalui binding `DB`.
-- **Pricelist**: paket harga, fitur, status popular, dan show/hide paket disimpan di Cloudflare D1 melalui binding `DB`.
+- **Pricelist**: CRUD paket harga melalui `/admin/pricelist`; fitur, status popular, show/hide, dan urutan paket disimpan di Cloudflare D1 melalui binding `DB`.
 - **Collections**: data collection disimpan di Cloudflare D1 melalui binding `DB`.
 - **Posts**: data post, relasi collection, title, description, dan metadata image disimpan di D1.
 - **Images**: file gambar disimpan di R2 melalui binding `GALLERY_BUCKET`; upload dari admin dikonversi ke WebP di frontend sebelum dikirim.

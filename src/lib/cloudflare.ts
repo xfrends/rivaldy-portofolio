@@ -51,6 +51,7 @@ export interface RuntimeEnv {
 	ADMIN_USERNAME?: string;
 	ADMIN_PASSWORD?: string;
 	ADMIN_SESSION_SECRET?: string;
+	SITE_URL?: string;
 	GALLERY_BUCKET?: R2BucketLike;
 	ANALYTICS?: KVNamespaceLike;
 	DB?: D1DatabaseLike;
@@ -63,10 +64,28 @@ export function getRuntimeEnv(locals: unknown): RuntimeEnv {
 	);
 }
 
-export function getEnvString(env: RuntimeEnv | undefined, key: keyof RuntimeEnv): string {
-	const value = env?.[key];
+export function getEnvString(env: RuntimeEnv | undefined, key: string): string {
+	const value = env?.[key as keyof RuntimeEnv];
 	if (typeof value === 'string') return value;
 
 	const fallback = import.meta.env[key];
 	return typeof fallback === 'string' ? fallback : '';
+}
+
+export interface AppConfig {
+	adminUsername: string;
+	adminPassword: string;
+	adminSessionSecret: string;
+	siteUrl: string;
+}
+
+export function getAppConfig(env?: RuntimeEnv): AppConfig {
+	const adminPassword = getEnvString(env, 'ADMIN_PASSWORD').trim();
+
+	return {
+		adminUsername: getEnvString(env, 'ADMIN_USERNAME').trim() || 'admin',
+		adminPassword,
+		adminSessionSecret: getEnvString(env, 'ADMIN_SESSION_SECRET').trim() || adminPassword,
+		siteUrl: getEnvString(env, 'SITE_URL').trim() || 'https://rivaldy-portfolio.pages.dev',
+	};
 }
