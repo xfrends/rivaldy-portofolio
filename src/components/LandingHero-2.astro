@@ -9,45 +9,58 @@ interface Props {
 const { content } = Astro.props;
 const heroSubtitles = content.heroTagline.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
 const title = content.heroTitle;
-const subtitleLabel = heroSubtitles.join(', ');
 ---
 
-<div
-	class="absolute top-[80px] bottom-[120px] left-0 right-0 z-0"
-	style={{
-		backgroundImage: `url(${withBase(content.heroImage)})`,
-		backgroundSize: 'cover',
-		backgroundPosition: 'center',
-		backgroundRepeat: 'no-repeat',
-		opacity: 0.6,
-	}}
->
-</div>
-<div class="container text-left mb-32 relative z-10">
-	<h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-		<span class="font-brand">{title}</span>
-	</h1>
-	<p
-		class="hero-subtitle-rotator mt-4 text-base md:text-lg text-gray-700"
-		aria-label={subtitleLabel}
+<!-- Full Screen Hero Image Background -->
+<div class="absolute inset-0 z-0 overflow-hidden">
+	<div
+		class="absolute inset-0 bg-black/40 scale-105 animate-[slowZoom_20s_ease-out_forwards]"
+		style={{
+			backgroundImage: `url(${withBase(content.heroImage)})`,
+			backgroundSize: 'cover',
+			backgroundPosition: 'center',
+			backgroundRepeat: 'no-repeat',
+		}}
 	>
-		{heroSubtitles.map((subtitle) => <span>{subtitle}</span>)}
-	</p>
+	</div>
+	<!-- Cinematic Vignette / Overlay -->
+	<div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/80 pointer-events-none"></div>
+</div>
+
+<!-- Content -->
+<div class="container-custom relative z-10 w-full h-full flex flex-col items-center justify-center text-center pt-32 pb-40">
+	<div class="mb-6 flex items-center justify-center gap-4 animate-fade-in-up">
+		<div class="h-[1px] w-8 md:w-16 bg-white/70"></div>
+		<span class="text-xs md:text-sm tracking-[0.3em] uppercase text-white/90 font-light">Portfolio</span>
+		<div class="h-[1px] w-8 md:w-16 bg-white/70"></div>
+	</div>
+	
+	<h1 class="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6 font-playfair tracking-tight text-white drop-shadow-2xl animate-fade-in-up" style="animation-delay: 0.2s;">
+		{title}
+	</h1>
+	
+	<div class="h-12 relative overflow-hidden mb-12 w-full animate-fade-in-up" style="animation-delay: 0.4s;">
+		<div class="hero-subtitle-rotator text-lg md:text-2xl text-gray-200 font-light italic font-playfair drop-shadow-md">
+			{heroSubtitles.map((subtitle) => <span>{subtitle}</span>)}
+		</div>
+	</div>
+	
 	<a
 		href={withBase('collections')}
-		class="mt-8 inline-block px-6 py-3 border-2 border-black rounded-md
-                      hover:bg-black hover:text-white transition-all duration-300
-                      text-sm md:text-base font-medium
-                      transform hover:scale-105 active:scale-95"
+		class="group inline-flex items-center gap-4 text-sm tracking-[0.15em] uppercase font-medium text-white hover:text-gray-300 transition-colors animate-fade-in-up"
+		style="animation-delay: 0.6s;"
 	>
-		View Gallery
+		<span class="border-b border-white/50 pb-1 group-hover:border-white transition-colors">Explore Gallery</span>
+		<svg class="w-5 h-5 transform group-hover:translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+			<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+		</svg>
 	</a>
 </div>
 
 <style>
 	.hero-subtitle-rotator {
 		display: grid;
-		min-height: 1.75em;
+		justify-content: center;
 	}
 
 	.hero-subtitle-rotator span {
@@ -64,27 +77,24 @@ const subtitleLabel = heroSubtitles.join(', ');
 		animation-delay: 6s;
 	}
 
-	.hero-subtitle-rotator span:nth-child(n + 4) {
-		display: none;
+	@keyframes heroSubtitleFade {
+		0%, 5% { opacity: 0; transform: translateY(10px); }
+		10%, 30% { opacity: 1; transform: translateY(0); }
+		35%, 100% { opacity: 0; transform: translateY(-10px); }
 	}
 
-	@keyframes heroSubtitleFade {
-		0%,
-		8% {
-			opacity: 0;
-			transform: translateY(0.25rem);
-		}
+	.animate-fade-in-up {
+		opacity: 0;
+		animation: fadeInUp 1s ease-out forwards;
+	}
 
-		12%,
-		29% {
-			opacity: 1;
-			transform: translateY(0);
-		}
-
-		33%,
-		100% {
-			opacity: 0;
-			transform: translateY(-0.25rem);
-		}
+	@keyframes fadeInUp {
+		from { opacity: 0; transform: translateY(30px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+	
+	@keyframes slowZoom {
+		from { transform: scale(1.05); }
+		to { transform: scale(1); }
 	}
 </style>

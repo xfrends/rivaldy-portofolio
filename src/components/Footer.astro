@@ -10,9 +10,14 @@ const socialLinks = siteConfig.socialLinks;
 <footer class="py-10 border-t border-gray-100 mt-auto">
 	<div class="container mx-auto">
 		<div class="flex flex-col md:flex-row justify-between items-center">
-			<div class="text-sm font-sans text-gray-500 mb-4 md:mb-0">
-				© {year}
-				<span class="font-brand font-semibold">{owner}</span>. All rights reserved.
+			<div class="flex flex-col items-center md:items-start text-sm font-sans text-gray-500 mb-4 md:mb-0">
+				<div>
+					© {year}
+					<span class="font-brand font-semibold text-black">{owner}</span>. All rights reserved.
+				</div>
+				<div class="text-[11px] text-gray-400 mt-1 opacity-50 hover:opacity-100 transition-opacity">
+					Developed by <a href="https://frendi.web.id" target="_blank" rel="noopener noreferrer" class="hover:text-black">Frendi</a>
+				</div>
 			</div>
 
 			<div class="flex space-x-6">

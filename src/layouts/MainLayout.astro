@@ -9,12 +9,14 @@ interface Props {
 	title?: string;
 	description?: string;
 	ogImage?: string;
+	navTheme?: 'light' | 'dark';
 }
 
 const {
 	title = siteConfig.title,
 	description = siteConfig.owner,
 	ogImage = siteConfig.profileImage,
+	navTheme = 'light',
 } = Astro.props;
 
 const favicon = siteConfig.favicon;
@@ -45,7 +47,7 @@ const favicon = siteConfig.favicon;
 		<meta property="og:type" content="website" />
 	</head>
 	<body>
-		<NavBar />
+		<NavBar navTheme={navTheme} />
 		<main>
 			<slot />
 		</main>

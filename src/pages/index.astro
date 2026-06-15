@@ -12,7 +12,7 @@ export const prerender = false;
 const content = await getSiteContent(getRuntimeEnv(Astro.locals));
 ---
 
-<MainLayout ogImage={content.heroImage}>
+<MainLayout ogImage={content.heroImage} navTheme="dark">
 	<section class="relative min-h-screen items-center flex py-20 md:py-16 overflow-hidden">
 		<LandingHero content={content} />
 		<FeaturedWorkScroll />
