@@ -1,6 +1,6 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { c as createAstro, a as createComponent, m as maybeRenderHead, d as addAttribute, b as renderTemplate, r as renderComponent, e as renderScript } from '../../chunks/astro/server_C894EArb.mjs';
-import { $ as $$MainLayout } from '../../chunks/MainLayout_BO7rbEiv.mjs';
+import { $ as $$MainLayout } from '../../chunks/MainLayout_Dlz4Tf9e.mjs';
 import { $ as $$AdminHeader, a as $$AdminAlerts, b as $$AdminNav } from '../../chunks/AdminNav_D6x2hMDL.mjs';
 import { w as withBase } from '../../chunks/urls_Bz0TJc3Q.mjs';
 import { i as isAdminAuthenticated } from '../../chunks/adminAuth_DcI6vYvm.mjs';

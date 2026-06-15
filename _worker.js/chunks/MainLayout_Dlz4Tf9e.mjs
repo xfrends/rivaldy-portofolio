@@ -48,7 +48,7 @@ const siteConfig = {
   socialLinks: [
     {
       name: "WhatsApp",
-      url: "https://wa.me/6289519022751",
+      url: "https://wa.me/6289519033751",
       icon: $$MessageCircle
     },
     {
@@ -100,4 +100,4 @@ const $$MainLayout = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate(_a || (_a = __template(['<html lang="en" class="h-full"> <head><meta charset="utf-8"><link rel="icon" type="image/x-icon"', '><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet"><meta name="viewport" content="width=device-width"><meta name="generator"', "><title>", "</title>", "</head> <body> ", " <main> ", " </main> ", ' <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"><\/script> ', "</body></html>"])), addAttribute(withBase(favicon), "href"), addAttribute(Astro2.generator, "content"), owner, renderHead(), renderComponent($$result, "NavBar", $$NavBar, {}), renderSlot($$result, $$slots["default"]), renderComponent($$result, "Footer", $$Footer, {}), renderScript($$result, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/layouts/MainLayout.astro?astro&type=script&index=0&lang.ts"));
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/layouts/MainLayout.astro", void 0);
 
-export { $$MainLayout as $, $$ as a };
+export { $$MainLayout as $, $$ as a, siteConfig as s };
