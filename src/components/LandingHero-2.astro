@@ -3,6 +3,11 @@ import siteConfig from '../../site.config.mjs';
 
 const owner = siteConfig.owner;
 const base = import.meta.env.BASE_URL;
+const heroSubtitles = [
+	'Your Graduation Story',
+	'Merayakan Gelar, Mengabadikan Moment',
+	'Frame Your Achievement',
+];
 ---
 
 <div
@@ -18,9 +23,14 @@ const base = import.meta.env.BASE_URL;
 </div>
 <div class="container text-left mb-32 relative z-10">
 	<h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-		{owner} Photography
+		<span class="font-brand">{owner}</span>
 	</h1>
-	<p class="mt-4 text-base md:text-lg text-gray-700">A place to showcase my photography</p>
+	<p
+		class="hero-subtitle-rotator mt-4 text-base md:text-lg text-gray-700"
+		aria-label="Your Graduation Story, Merayakan Gelar, Mengabadikan Moment, Frame Your Achievement"
+	>
+		{heroSubtitles.map((subtitle) => <span>{subtitle}</span>)}
+	</p>
 	<a
 		href=`${base}/collections`
 		class="mt-8 inline-block px-6 py-3 border-2 border-black rounded-md
@@ -31,3 +41,44 @@ const base = import.meta.env.BASE_URL;
 		View Gallery
 	</a>
 </div>
+
+<style>
+	.hero-subtitle-rotator {
+		display: grid;
+		min-height: 1.75em;
+	}
+
+	.hero-subtitle-rotator span {
+		animation: heroSubtitleFade 9s infinite;
+		grid-area: 1 / 1;
+		opacity: 0;
+	}
+
+	.hero-subtitle-rotator span:nth-child(2) {
+		animation-delay: 3s;
+	}
+
+	.hero-subtitle-rotator span:nth-child(3) {
+		animation-delay: 6s;
+	}
+
+	@keyframes heroSubtitleFade {
+		0%,
+		8% {
+			opacity: 0;
+			transform: translateY(0.25rem);
+		}
+
+		12%,
+		29% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		33%,
+		100% {
+			opacity: 0;
+			transform: translateY(-0.25rem);
+		}
+	}
+</style>

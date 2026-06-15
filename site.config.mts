@@ -8,9 +8,9 @@ export interface SocialLink {
 }
 
 export default {
-	title: 'SR',
+	title: 'Rivaldy Ahnaf Abida',
 	favicon: 'favicon.ico',
-	owner: 'Sara Richard',
+	owner: 'A Photo by Rvldy',
 	profileImage: 'profile.webp',
 	socialLinks: [
 		{
