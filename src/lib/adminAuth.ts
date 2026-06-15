@@ -2,13 +2,10 @@ import type { AstroCookies } from 'astro';
 import { getEnvString, type RuntimeEnv } from './cloudflare';
 
 const cookieName = 'rivaldy_admin_session';
+const defaultAdminUsername = 'admin';
 
 export function hasAdminConfig(env?: RuntimeEnv): boolean {
-	return Boolean(
-		getEnvString(env, 'ADMIN_USERNAME') &&
-			getEnvString(env, 'ADMIN_PASSWORD') &&
-			getEnvString(env, 'ADMIN_SESSION_SECRET'),
-	);
+	return Boolean(getAdminPassword(env));
 }
 
 export function validateAdminCredentials(
@@ -17,8 +14,8 @@ export function validateAdminCredentials(
 	env?: RuntimeEnv,
 ): boolean {
 	return (
-		safeEqual(username, getEnvString(env, 'ADMIN_USERNAME')) &&
-		safeEqual(password, getEnvString(env, 'ADMIN_PASSWORD'))
+		safeEqual(username.trim(), getAdminUsername(env)) &&
+		safeEqual(password.trim(), getAdminPassword(env))
 	);
 }
 
@@ -58,7 +55,7 @@ export async function isAdminAuthenticated(
 			username?: string;
 			issuedAt?: string;
 		};
-		return session.username === getEnvString(env, 'ADMIN_USERNAME');
+		return session.username === getAdminUsername(env);
 	} catch {
 		return false;
 	}
@@ -68,13 +65,25 @@ async function sign(payload: string, env?: RuntimeEnv): Promise<string> {
 	const encoder = new TextEncoder();
 	const key = await crypto.subtle.importKey(
 		'raw',
-		encoder.encode(getEnvString(env, 'ADMIN_SESSION_SECRET')),
+		encoder.encode(getSessionSecret(env)),
 		{ name: 'HMAC', hash: 'SHA-256' },
 		false,
 		['sign'],
 	);
 	const signature = await crypto.subtle.sign('HMAC', key, encoder.encode(payload));
 	return btoa(String.fromCharCode(...new Uint8Array(signature)));
+}
+
+export function getAdminUsername(env?: RuntimeEnv): string {
+	return getEnvString(env, 'ADMIN_USERNAME').trim() || defaultAdminUsername;
+}
+
+function getAdminPassword(env?: RuntimeEnv): string {
+	return getEnvString(env, 'ADMIN_PASSWORD').trim();
+}
+
+function getSessionSecret(env?: RuntimeEnv): string {
+	return getEnvString(env, 'ADMIN_SESSION_SECRET').trim() || getAdminPassword(env);
 }
 
 function safeEqual(a: string, b: string): boolean {

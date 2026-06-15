@@ -21,9 +21,9 @@ Proyek ini dapat di-deploy secara gratis ke Cloudflare Pages. Ikuti langkah-lang
    - **Build command**: `npm run build`
    - **Build output directory**: `dist`
 7. *(Opsional - Hanya jika Anda menggunakan fitur Admin CMS)* Klik **Environment variables (advanced)** dan tambahkan:
-   - `ADMIN_USERNAME`: username pilihan Anda
-   - `ADMIN_PASSWORD`: password rahasia Anda
-   - `ADMIN_SESSION_SECRET`: teks acak yang panjang (untuk keamanan sesi)
+   - `ADMIN_PASSWORD`: password rahasia admin
+   - `ADMIN_USERNAME`: opsional, default `admin`
+   - `ADMIN_SESSION_SECRET`: opsional, default memakai `ADMIN_PASSWORD`
    - `SITE_URL`: URL situs Anda (misal: `https://portofolio-anda.pages.dev`)
 8. Klik **Save and Deploy**. Cloudflare akan memproses build dan situs Anda akan segera online!
 
@@ -41,9 +41,9 @@ Isi yang wajib:
 
 | Key | Dipakai untuk | Contoh |
 | --- | --- | --- |
-| `ADMIN_USERNAME` | Login admin statis | `admin` |
-| `ADMIN_PASSWORD` | Password admin statis | `password-kuat` |
-| `ADMIN_SESSION_SECRET` | Signing cookie session admin | `teks-random-panjang` |
+| `ADMIN_PASSWORD` | Password admin statis, wajib untuk login CMS | `password-kuat` |
+| `ADMIN_USERNAME` | Login admin statis, opsional default `admin` | `admin` |
+| `ADMIN_SESSION_SECRET` | Signing cookie session admin, opsional default `ADMIN_PASSWORD` | `teks-random-panjang` |
 | `SITE_URL` | URL canonical/site config | `https://portofolio-anda.pages.dev` |
 
 Key referensi resource Cloudflare di `.env.example`:

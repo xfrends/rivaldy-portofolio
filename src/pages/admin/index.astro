@@ -4,7 +4,7 @@ import AdminAlerts from '../../components/admin/AdminAlerts.astro';
 import AdminHeader from '../../components/admin/AdminHeader.astro';
 import AdminNav from '../../components/admin/AdminNav.astro';
 import MetricPanel from '../../components/admin/MetricPanel.astro';
-import { hasAdminConfig, isAdminAuthenticated } from '../../lib/adminAuth';
+import { getAdminUsername, hasAdminConfig, isAdminAuthenticated } from '../../lib/adminAuth';
 import { getAnalyticsSnapshot } from '../../lib/analytics';
 import { getRuntimeEnv } from '../../lib/cloudflare';
 import { getAdminGalleryState } from '../../lib/galleryCms';
@@ -15,6 +15,7 @@ export const prerender = false;
 const runtimeEnv = getRuntimeEnv(Astro.locals);
 const isAuthenticated = await isAdminAuthenticated(Astro.cookies, runtimeEnv);
 const hasConfig = hasAdminConfig(runtimeEnv);
+const adminUsername = getAdminUsername(runtimeEnv);
 const state = isAuthenticated ? await getAdminGalleryState(runtimeEnv) : undefined;
 const analytics = isAuthenticated && state
 	? await getAnalyticsSnapshot(runtimeEnv, state.collections, state.posts)
@@ -37,13 +38,13 @@ const formatter = new Intl.NumberFormat('id-ID');
 						<h1 class="text-3xl font-bold">Admin Login</h1>
 						{!hasConfig && (
 							<p class="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
-								Tambahkan credential admin di file .env sebelum login.
+								Tambahkan ADMIN_PASSWORD di environment variable sebelum login.
 							</p>
 						)}
 						<AdminAlerts error={error === 'login' ? 'Username atau password salah.' : error} success={success} />
 						<label class="block">
 							<span class="text-sm font-medium text-zinc-800">Username</span>
-							<input name="username" type="text" autocomplete="username" required class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900" />
+							<input name="username" type="text" value={adminUsername} autocomplete="username" required class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900" />
 						</label>
 						<label class="block">
 							<span class="text-sm font-medium text-zinc-800">Password</span>
