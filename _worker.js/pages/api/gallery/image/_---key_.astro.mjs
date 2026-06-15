@@ -1,5 +1,5 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { g as getRuntimeEnv } from '../../../../chunks/cloudflare_Bbc2K49a.mjs';
+import { g as getRuntimeEnv } from '../../../../chunks/cloudflare_Dxf-Pucn.mjs';
 export { renderers } from '../../../../renderers.mjs';
 
 const GET = async ({ params, locals }) => {

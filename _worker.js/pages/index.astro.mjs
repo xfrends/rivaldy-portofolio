@@ -1,11 +1,11 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { a as createComponent, c as createAstro, r as renderComponent, b as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_C894EArb.mjs';
-import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_BHIsIH7R.mjs';
+import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_C2YXzli1.mjs';
 import { w as withBase } from '../chunks/urls_Bz0TJc3Q.mjs';
 /* empty css                                 */
 import { a as getImages, f as featuredCollectionId, $ as $$PhotoGrid } from '../chunks/imageStore_D7uUB0-D.mjs';
-import { g as getRuntimeEnv } from '../chunks/cloudflare_Bbc2K49a.mjs';
-import { g as getSiteContent } from '../chunks/siteCms_CeSbKqhp.mjs';
+import { g as getRuntimeEnv } from '../chunks/cloudflare_Dxf-Pucn.mjs';
+import { g as getSiteContent } from '../chunks/siteCms_B1R7PNz1.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Astro$4 = createAstro("https://rivaldy-portfolio.pages.dev");

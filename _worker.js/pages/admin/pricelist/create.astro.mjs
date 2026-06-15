@@ -2,7 +2,7 @@ globalThis.process ??= {}; globalThis.process.env ??= {};
 import { c as createAstro, a as createComponent, r as renderComponent, b as renderTemplate, m as maybeRenderHead } from '../../../chunks/astro/server_C894EArb.mjs';
 import { $ as $$MainLayout } from '../../../chunks/MainLayout_C2YXzli1.mjs';
 import { $ as $$AdminHeader, a as $$AdminAlerts, b as $$AdminNav } from '../../../chunks/AdminNav_BX7kbxZT.mjs';
-import { $ as $$CollectionForm } from '../../../chunks/CollectionForm_BZB4FZvC.mjs';
+import { $ as $$PricelistForm } from '../../../chunks/PricelistForm_C2Q2wAsC.mjs';
 import { i as isAdminAuthenticated } from '../../../chunks/adminAuth_BPmTUUIX.mjs';
 import { g as getRuntimeEnv } from '../../../chunks/cloudflare_Dxf-Pucn.mjs';
 import { w as withBase } from '../../../chunks/urls_Bz0TJc3Q.mjs';
@@ -15,11 +15,11 @@ const $$Create = createComponent(async ($$result, $$props, $$slots) => {
   Astro2.self = $$Create;
   const runtimeEnv = getRuntimeEnv(Astro2.locals);
   if (!await isAdminAuthenticated(Astro2.cookies, runtimeEnv)) return Astro2.redirect(withBase("admin?error=session"));
-  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, {}, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="min-h-screen bg-zinc-50 px-4 py-20 md:px-6"> <div class="mx-auto max-w-7xl"> ${renderComponent($$result2, "AdminHeader", $$AdminHeader, {})} ${renderComponent($$result2, "AdminAlerts", $$AdminAlerts, { "error": Astro2.url.searchParams.get("error"), "success": null })} <div class="grid gap-6 lg:grid-cols-[220px_1fr]"> ${renderComponent($$result2, "AdminNav", $$AdminNav, { "active": "collections" })} <main class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <h2 class="mb-5 text-2xl font-semibold">Create Collection</h2> ${renderComponent($$result2, "CollectionForm", $$CollectionForm, { "mode": "create" })} </main> </div> </div> </section> ` })}`;
-}, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/admin/collections/create.astro", void 0);
+  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, {}, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="min-h-screen bg-zinc-50 px-4 py-20 md:px-6"> <div class="mx-auto max-w-7xl"> ${renderComponent($$result2, "AdminHeader", $$AdminHeader, {})} ${renderComponent($$result2, "AdminAlerts", $$AdminAlerts, { "error": Astro2.url.searchParams.get("error"), "success": null })} <div class="grid gap-6 lg:grid-cols-[220px_1fr]"> ${renderComponent($$result2, "AdminNav", $$AdminNav, { "active": "pricelist" })} <main class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <h2 class="mb-5 text-2xl font-semibold">Create Pricelist Package</h2> ${renderComponent($$result2, "PricelistForm", $$PricelistForm, { "mode": "create" })} </main> </div> </div> </section> ` })}`;
+}, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/admin/pricelist/create.astro", void 0);
 
-const $$file = "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/admin/collections/create.astro";
-const $$url = "/admin/collections/create";
+const $$file = "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/admin/pricelist/create.astro";
+const $$url = "/admin/pricelist/create";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 	__proto__: null,

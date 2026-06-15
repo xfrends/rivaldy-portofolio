@@ -15,7 +15,10 @@ const $$AdminAlerts = createComponent(($$result, $$props, $$slots) => {
     "post-updated": "Post berhasil diupdate.",
     "post-deleted": "Post berhasil dihapus.",
     "content-updated": "Content website berhasil diupdate.",
-    "pricelist-updated": "Pricelist berhasil diupdate."
+    "pricelist-created": "Paket pricelist berhasil dibuat.",
+    "pricelist-updated": "Pricelist berhasil diupdate.",
+    "pricelist-deleted": "Paket pricelist berhasil dihapus.",
+    "admin-created": "Admin berhasil dibuat."
   };
   return renderTemplate`${error && renderTemplate`${maybeRenderHead()}<div class="mb-5 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">${error}</div>`}${success && successText[success] && renderTemplate`<div class="mb-5 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">${successText[success]}</div>`}`;
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/components/admin/AdminAlerts.astro", void 0);

@@ -1,8 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { a as getEnvString } from './cloudflare_Bbc2K49a.mjs';
+import { a as getAppConfig } from './cloudflare_Dxf-Pucn.mjs';
 
 const cookieName = "rivaldy_admin_session";
-const defaultAdminUsername = "admin";
 function hasAdminConfig(env) {
   return Boolean(getAdminPassword(env));
 }
@@ -52,13 +51,13 @@ async function sign(payload, env) {
   return btoa(String.fromCharCode(...new Uint8Array(signature)));
 }
 function getAdminUsername(env) {
-  return getEnvString(env, "ADMIN_USERNAME").trim() || defaultAdminUsername;
+  return getAppConfig(env).adminUsername;
 }
 function getAdminPassword(env) {
-  return getEnvString(env, "ADMIN_PASSWORD").trim();
+  return getAppConfig(env).adminPassword;
 }
 function getSessionSecret(env) {
-  return getEnvString(env, "ADMIN_SESSION_SECRET").trim() || getAdminPassword(env);
+  return getAppConfig(env).adminSessionSecret;
 }
 function safeEqual(a, b) {
   if (a.length !== b.length) return false;
