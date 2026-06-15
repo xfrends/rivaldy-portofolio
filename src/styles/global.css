@@ -55,11 +55,11 @@
 	}
 
 	.nav-link {
-		@apply relative text-base font-medium text-gray-800 transition-all duration-300 hover:text-black;
+		@apply relative text-base font-medium transition-all duration-300 opacity-80 hover:opacity-100;
 	}
 
 	.nav-link::after {
-		@apply content-[''] absolute w-0 h-[1px] bg-black bottom-[-2px] left-0 transition-all duration-300 ease-in-out;
+		@apply content-[''] absolute w-0 h-[1px] bg-current bottom-[-2px] left-0 transition-all duration-300 ease-in-out;
 	}
 
 	.nav-link:hover::after {

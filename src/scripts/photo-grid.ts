@@ -1,5 +1,4 @@
 import justifiedLayout from 'justified-layout';
-import GLightbox from 'glightbox';
 
 interface JustifiedLayoutResult {
 	/**
@@ -46,8 +45,6 @@ interface LayoutBox {
 	forcedAspectRatio?: boolean;
 }
 
-let lightboxInstance: any = null;
-
 export async function setupGallery() {
 	if (typeof document === 'undefined') return;
 
@@ -73,22 +70,6 @@ export async function setupGallery() {
 
 	applyImagesStyleBasedOnLayout(imageLinks, layout);
 	applyContainerStyleBasedOnLayout(container, layout);
-
-	// Initialize GLightbox
-	if (lightboxInstance) {
-		try { lightboxInstance.destroy(); } catch (e) {}
-	}
-	lightboxInstance = GLightbox({
-		selector: '.glightbox',
-		openEffect: 'zoom',
-		closeEffect: 'fade',
-		width: 'auto',
-		height: 'auto',
-		loop: true,
-		touchNavigation: true,
-		keyboardNavigation: true,
-		descPosition: 'bottom',
-	});
 }
 
 function createLayoutFor(

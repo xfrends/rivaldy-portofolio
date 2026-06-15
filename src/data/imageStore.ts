@@ -169,9 +169,15 @@ const processImages = (images: GalleryImage[], galleryPath: string): Image[] => 
  */
 const createImageDataFor = (imagePath: string, img: GalleryImage, galleryPath: string): Image => {
 	if (isPublicImagePath(img.path)) {
+		let additionalSrcs: Array<PublicImage> = [];
+		if (img.additionalPaths && img.additionalPaths.length > 0) {
+			additionalSrcs = img.additionalPaths.map(addPath => publicImageFrom(addPath));
+		}
+		
 		return {
 			id: img.id,
 			src: publicImageFrom(img.path),
+			...(additionalSrcs.length > 0 && { additionalSrcs }),
 			title: img.meta.title,
 			description: img.meta.description,
 			collections: img.meta.collections,
