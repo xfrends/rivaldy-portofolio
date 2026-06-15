@@ -1,19 +1,86 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { c as createAstro, a as createComponent, m as maybeRenderHead, e as renderScript, b as renderTemplate, r as renderComponent, F as Fragment, d as addAttribute } from './astro/server_C894EArb.mjs';
+import { c as createAstro, a as createComponent, b as renderTemplate, e as renderScript, d as addAttribute, r as renderComponent, m as maybeRenderHead, f as defineScriptVars } from './astro/server_DBcCZzNC.mjs';
+import { $ as $$Image } from './_astro_assets_BX076heD.mjs';
 /* empty css                         */
-import { $ as $$Image } from './_astro_assets_DPnecMoQ.mjs';
 import { h as getCmsGalleryData } from './galleryCms_BqZ0DBxM.mjs';
 import { w as withBase } from './urls_Bz0TJc3Q.mjs';
 
+var __freeze = Object.freeze;
+var __defProp = Object.defineProperty;
+var __template = (cooked, raw) => __freeze(__defProp(cooked, "raw", { value: __freeze(cooked.slice()) }));
+var _a;
 const $$Astro = createAstro("https://rivaldy-portfolio.pages.dev");
 const $$PhotoGrid = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$PhotoGrid;
   const { images } = Astro2.props;
   const isPublicImage = (src) => typeof src.src === "string" && src.src.startsWith("/");
-  return renderTemplate`${maybeRenderHead()}<section id="photo-grid" class="relative w-full mx-auto overflow-hidden"> ${images.length === 0 && renderTemplate`<div class="flex min-h-64 items-center justify-center rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-12 text-center text-sm text-zinc-500">
+  const postsData = images.map((img) => {
+    const allImages = [
+      typeof img.src.src === "string" ? img.src.src : img.src,
+      ...(img.additionalSrcs || []).map((add) => typeof add.src === "string" ? add.src : add)
+    ];
+    return {
+      id: img.id,
+      title: img.title || "",
+      description: img.description || "",
+      images: allImages
+    };
+  });
+  return renderTemplate(_a || (_a = __template(["<script>(function(){", "\n	window.postsData = postsData;\n})();<\/script> ", '<section id="photo-grid" class="relative w-full mx-auto overflow-hidden"', " data-astro-cid-auwy4is6> ", " <!-- Justified Layout Grid Items --> ", ` <!-- Instagram-style Detail Modal --> <div x-show="modalOpen" x-transition.opacity.duration.300ms class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-0 md:p-4" style="display: none;" @keydown.escape.window="closeModal()" @keydown.right.window="next()" @keydown.left.window="prev()" data-astro-cid-auwy4is6> <!-- Close Button --> <button @click="closeModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 p-2 z-50 rounded-full bg-black/50" data-astro-cid-auwy4is6> <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-auwy4is6><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" data-astro-cid-auwy4is6></path></svg> </button> <div class="relative w-full h-full md:max-w-6xl md:h-[90vh] flex flex-col md:flex-row bg-white md:rounded-lg overflow-hidden shadow-2xl" @click.away="closeModal()" data-astro-cid-auwy4is6> <!-- Image Carousel Section (Left side on desktop) --> <div class="relative w-full md:w-3/4 h-[65%] md:h-full bg-black flex items-center justify-center overflow-hidden group" data-astro-cid-auwy4is6> <div id="ig-carousel" class="flex overflow-x-auto snap-x snap-mandatory w-full h-full hide-scrollbar items-center" @scroll.passive="onScroll" data-astro-cid-auwy4is6> <template x-for="(imgSrc, idx) in (currentPost ? currentPost.images : [])" :key="idx" data-astro-cid-auwy4is6> <div class="w-full h-full flex-shrink-0 snap-center flex justify-center items-center" data-astro-cid-auwy4is6> <img :src="imgSrc" class="max-w-full max-h-full object-contain select-none" data-astro-cid-auwy4is6> </div> </template> </div> <!-- Navigation Arrows --> <button x-show="currentPost && currentPost.images.length > 1 && currentIndex > 0" @click.stop="prev()" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-lg transition-opacity" data-astro-cid-auwy4is6> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-auwy4is6><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" data-astro-cid-auwy4is6></path></svg> </button> <button x-show="currentPost && currentPost.images.length > 1 && currentIndex < currentPost.images.length - 1" @click.stop="next()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-black rounded-full p-2 shadow-lg transition-opacity" data-astro-cid-auwy4is6> <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" data-astro-cid-auwy4is6><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" data-astro-cid-auwy4is6></path></svg> </button> <!-- Instagram Dots --> <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5" x-show="currentPost && currentPost.images.length > 1" data-astro-cid-auwy4is6> <template x-for="(_, idx) in (currentPost ? currentPost.images : [])" :key="idx" data-astro-cid-auwy4is6> <div class="w-1.5 h-1.5 rounded-full transition-all duration-300" :class="currentIndex === idx ? 'bg-blue-500 scale-110' : 'bg-white/50 scale-100'" data-astro-cid-auwy4is6></div> </template> </div> </div> <!-- Post Details Section (Right side on desktop) --> <div class="w-full md:w-1/4 bg-white p-6 flex flex-col h-[35%] md:h-full overflow-y-auto" data-astro-cid-auwy4is6> <!-- Header (User/Avatar simulation) --> <div class="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4 shrink-0" data-astro-cid-auwy4is6> <div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center font-bold font-playfair text-black text-sm border border-black" data-astro-cid-auwy4is6>
+R
+</div> <div class="font-semibold text-sm" data-astro-cid-auwy4is6>Rivaldy Portfolio</div> </div> <!-- Content --> <div class="flex-grow" data-astro-cid-auwy4is6> <h3 class="text-xl font-bold mb-2 font-playfair" x-text="currentPost ? currentPost.title : ''" x-show="currentPost && currentPost.title" data-astro-cid-auwy4is6></h3> <p class="text-sm text-gray-700 whitespace-pre-line leading-relaxed" x-text="currentPost ? currentPost.description : ''" x-show="currentPost && currentPost.description" data-astro-cid-auwy4is6></p> <div x-show="currentPost && !currentPost.title && !currentPost.description" class="text-sm text-gray-400 italic" data-astro-cid-auwy4is6>
+No description available.
+</div> </div> </div> </div> </div> </section>  `, ""])), defineScriptVars({ postsData }), maybeRenderHead(), addAttribute(`{
+		posts: window.postsData,
+		modalOpen: false,
+		currentPost: null,
+		currentIndex: 0,
+		openModal(index) {
+			this.currentPost = this.posts[index];
+			this.currentIndex = 0;
+			this.modalOpen = true;
+			document.body.style.overflow = 'hidden';
+			this.$nextTick(() => {
+				const container = document.getElementById('ig-carousel');
+				if (container) container.scrollLeft = 0;
+			});
+		},
+		closeModal() {
+			this.modalOpen = false;
+			document.body.style.overflow = '';
+		},
+		next() {
+			if (this.currentPost && this.currentIndex < this.currentPost.images.length - 1) {
+				this.currentIndex++;
+				this.scrollToCurrent();
+			}
+		},
+		prev() {
+			if (this.currentIndex > 0) {
+				this.currentIndex--;
+				this.scrollToCurrent();
+			}
+		},
+		scrollToCurrent() {
+			const container = document.getElementById('ig-carousel');
+			if (container) {
+				container.scrollTo({
+					left: this.currentIndex * container.offsetWidth,
+					behavior: 'smooth'
+				});
+			}
+		},
+		onScroll(e) {
+			const container = e.target;
+			const index = Math.round(container.scrollLeft / container.offsetWidth);
+			if (index !== this.currentIndex) {
+				this.currentIndex = index;
+			}
+		}
+	}`, "x-data"), images.length === 0 && renderTemplate`<div class="flex min-h-64 items-center justify-center rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-12 text-center text-sm text-zinc-500" data-astro-cid-auwy4is6>
 No gallery posts yet.
-</div>`} ${images.map((image, index) => renderTemplate`${renderComponent($$result, "Fragment", Fragment, {}, { "default": ($$result2) => renderTemplate` <a${addAttribute(image.src.src, "href")} class="photo-item glightbox absolute transition-transform hover:scale-[1.02] hover:z-10 group"${addAttribute(`gallery-${index}`, "data-gallery")} data-type="image"${addAttribute(image.id, "data-post-id")}${addAttribute(image.description ? `title: ${image.description}` : void 0, "data-glightbox")}> ${isPublicImage(image.src) ? renderTemplate`<img${addAttribute(image.src.src, "src")}${addAttribute(image.src.width, "width")}${addAttribute(image.src.height, "height")} class="w-full h-full object-cover rounded-sm shadow-sm hover:shadow-lg transition-shadow"${addAttribute(image.title, "alt")} loading="lazy" decoding="async">` : renderTemplate`${renderComponent($$result2, "Image", $$Image, { "src": image.src, "quality": 90, "format": "webp", "width": image.src.width, "height": image.src.height, "class": "w-full h-full object-cover rounded-sm shadow-sm hover:shadow-lg transition-shadow", "alt": image.title })}`} ${image.additionalSrcs && image.additionalSrcs.length > 0 && renderTemplate`<div class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white p-1.5 rounded-md pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity"> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <rect x="3" y="3" width="14" height="14" rx="2" ry="2"></rect> <path d="M7 21h14a2 2 0 0 0 2-2V7"></path> </svg> </div>`} </a> ${image.additionalSrcs && image.additionalSrcs.map((addSrc) => renderTemplate`<a${addAttribute(addSrc.src, "href")} class="glightbox hidden"${addAttribute(`gallery-${index}`, "data-gallery")} data-type="image"></a>`)}` })}`)} </section> ${renderScript($$result, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/components/PhotoGrid.astro?astro&type=script&index=0&lang.ts")}`;
+</div>`, images.map((image, index) => renderTemplate`<a href="#"${addAttribute(`openModal(${index})`, "@click.prevent")} class="photo-item absolute transition-transform hover:scale-[1.02] hover:z-10 group" data-astro-cid-auwy4is6> ${isPublicImage(image.src) ? renderTemplate`<img${addAttribute(image.src.src, "src")}${addAttribute(image.src.width, "width")}${addAttribute(image.src.height, "height")} class="w-full h-full object-cover rounded-sm shadow-sm hover:shadow-lg transition-shadow"${addAttribute(image.title, "alt")} loading="lazy" decoding="async" data-astro-cid-auwy4is6>` : renderTemplate`${renderComponent($$result, "Image", $$Image, { "src": image.src, "quality": 90, "format": "webp", "width": image.src.width, "height": image.src.height, "class": "w-full h-full object-cover rounded-sm shadow-sm hover:shadow-lg transition-shadow", "alt": image.title, "data-astro-cid-auwy4is6": true })}`} ${image.additionalSrcs && image.additionalSrcs.length > 0 && renderTemplate`<div class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white p-1.5 rounded-md pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity" data-astro-cid-auwy4is6> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-auwy4is6> <rect x="3" y="3" width="14" height="14" rx="2" ry="2" data-astro-cid-auwy4is6></rect> <path d="M7 21h14a2 2 0 0 0 2-2V7" data-astro-cid-auwy4is6></path> </svg> </div>`} </a>`), renderScript($$result, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/components/PhotoGrid.astro?astro&type=script&index=0&lang.ts"));
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/components/PhotoGrid.astro", void 0);
 
 const kukuBubble = new Proxy({"src":"/_astro/kuku-bubble.D2gPcVvX.jpg","width":800,"height":800,"format":"jpg"}, {
@@ -373,9 +440,14 @@ const processImages = (images, galleryPath) => {
 };
 const createImageDataFor = (imagePath, img, galleryPath) => {
   if (isPublicImagePath(img.path)) {
+    let additionalSrcs2 = [];
+    if (img.additionalPaths && img.additionalPaths.length > 0) {
+      additionalSrcs2 = img.additionalPaths.map((addPath) => publicImageFrom(addPath));
+    }
     return {
       id: img.id,
       src: publicImageFrom(img.path),
+      ...additionalSrcs2.length > 0 && { additionalSrcs: additionalSrcs2 },
       title: img.meta.title,
       description: img.meta.description,
       collections: img.meta.collections

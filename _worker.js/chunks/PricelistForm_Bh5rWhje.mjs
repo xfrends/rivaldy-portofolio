@@ -1,5 +1,5 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { c as createAstro, a as createComponent, m as maybeRenderHead, d as addAttribute, b as renderTemplate } from './astro/server_C894EArb.mjs';
+import { c as createAstro, a as createComponent, m as maybeRenderHead, d as addAttribute, b as renderTemplate } from './astro/server_DBcCZzNC.mjs';
 import { w as withBase } from './urls_Bz0TJc3Q.mjs';
 
 const $$Astro = createAstro("https://rivaldy-portfolio.pages.dev");

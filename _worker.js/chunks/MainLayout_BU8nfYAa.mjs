@@ -1,5 +1,5 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { a as createComponent, c as createAstro, m as maybeRenderHead, s as spreadAttributes, d as addAttribute, o as renderSlot, b as renderTemplate, r as renderComponent, e as renderScript, p as renderHead } from './astro/server_C894EArb.mjs';
+import { a as createComponent, c as createAstro, m as maybeRenderHead, s as spreadAttributes, d as addAttribute, p as renderSlot, b as renderTemplate, r as renderComponent, e as renderScript, q as renderHead } from './astro/server_DBcCZzNC.mjs';
 /* empty css                         */
 import { w as withBase } from './urls_Bz0TJc3Q.mjs';
 

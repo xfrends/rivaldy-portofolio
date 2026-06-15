@@ -1,5 +1,5 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { g as getConfiguredImageService, i as imageConfig, l as lookup } from '../chunks/_astro_assets_DPnecMoQ.mjs';
+import { g as getConfiguredImageService, i as imageConfig, l as lookup } from '../chunks/_astro_assets_BX076heD.mjs';
 import { i as isRemotePath } from '../chunks/path_CH3auf61.mjs';
 import { i as isRemoteAllowed } from '../chunks/remote_CVXTZJrr.mjs';
 export { renderers } from '../renderers.mjs';
