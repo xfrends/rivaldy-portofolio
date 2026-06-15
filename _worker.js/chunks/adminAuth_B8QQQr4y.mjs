@@ -2,13 +2,12 @@ globalThis.process ??= {}; globalThis.process.env ??= {};
 import { a as getEnvString } from './cloudflare_Bbc2K49a.mjs';
 
 const cookieName = "rivaldy_admin_session";
+const defaultAdminUsername = "admin";
 function hasAdminConfig(env) {
-  return Boolean(
-    getEnvString(env, "ADMIN_USERNAME") && getEnvString(env, "ADMIN_PASSWORD") && getEnvString(env, "ADMIN_SESSION_SECRET")
-  );
+  return Boolean(getAdminPassword(env));
 }
 function validateAdminCredentials(username, password, env) {
-  return safeEqual(username, getEnvString(env, "ADMIN_USERNAME")) && safeEqual(password, getEnvString(env, "ADMIN_PASSWORD"));
+  return safeEqual(username.trim(), getAdminUsername(env)) && safeEqual(password.trim(), getAdminPassword(env));
 }
 async function createAdminSession(username, env) {
   const issuedAt = Date.now().toString();
@@ -35,7 +34,7 @@ async function isAdminAuthenticated(cookies, env) {
   if (!payload || !signature || !safeEqual(signature, await sign(payload, env))) return false;
   try {
     const session = JSON.parse(atob(payload));
-    return session.username === getEnvString(env, "ADMIN_USERNAME");
+    return session.username === getAdminUsername(env);
   } catch {
     return false;
   }
@@ -44,13 +43,22 @@ async function sign(payload, env) {
   const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw",
-    encoder.encode(getEnvString(env, "ADMIN_SESSION_SECRET")),
+    encoder.encode(getSessionSecret(env)),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"]
   );
   const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
   return btoa(String.fromCharCode(...new Uint8Array(signature)));
+}
+function getAdminUsername(env) {
+  return getEnvString(env, "ADMIN_USERNAME").trim() || defaultAdminUsername;
+}
+function getAdminPassword(env) {
+  return getEnvString(env, "ADMIN_PASSWORD").trim();
+}
+function getSessionSecret(env) {
+  return getEnvString(env, "ADMIN_SESSION_SECRET").trim() || getAdminPassword(env);
 }
 function safeEqual(a, b) {
   if (a.length !== b.length) return false;
@@ -61,4 +69,4 @@ function safeEqual(a, b) {
   return result === 0;
 }
 
-export { clearAdminSession as a, createAdminSession as c, hasAdminConfig as h, isAdminAuthenticated as i, setAdminSession as s, validateAdminCredentials as v };
+export { clearAdminSession as a, createAdminSession as c, getAdminUsername as g, hasAdminConfig as h, isAdminAuthenticated as i, setAdminSession as s, validateAdminCredentials as v };

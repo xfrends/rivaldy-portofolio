@@ -3,7 +3,7 @@ import { c as createAstro, a as createComponent, r as renderComponent, b as rend
 import { $ as $$MainLayout } from '../../../chunks/MainLayout_BHIsIH7R.mjs';
 import { $ as $$AdminHeader, a as $$AdminAlerts, b as $$AdminNav } from '../../../chunks/AdminNav_HM-P2NB3.mjs';
 import { $ as $$CollectionForm } from '../../../chunks/CollectionForm_BZB4FZvC.mjs';
-import { i as isAdminAuthenticated } from '../../../chunks/adminAuth_DcI6vYvm.mjs';
+import { i as isAdminAuthenticated } from '../../../chunks/adminAuth_B8QQQr4y.mjs';
 import { g as getRuntimeEnv } from '../../../chunks/cloudflare_Bbc2K49a.mjs';
 import { w as withBase } from '../../../chunks/urls_Bz0TJc3Q.mjs';
 export { renderers } from '../../../renderers.mjs';
