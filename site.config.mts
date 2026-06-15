@@ -9,7 +9,7 @@ export interface SocialLink {
 
 export default {
 	title: 'Rivaldy Ahnaf Abida',
-	favicon: 'favicon.ico',
+	favicon: 'favicon.svg',
 	owner: 'A Photo by Rvldy',
 	profileImage: 'profile.webp',
 	socialLinks: [
