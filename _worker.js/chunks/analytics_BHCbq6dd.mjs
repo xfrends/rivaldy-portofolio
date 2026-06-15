@@ -6,7 +6,8 @@ const postPrefix = "analytics:post:";
 async function trackView(input) {
   const kv = input.env?.ANALYTICS;
   if (!kv) return;
-  const increments = [totalKey];
+  const today = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+  const increments = [totalKey, `${totalKey}:${today}`];
   if (input.path) increments.push(`${pagePrefix}${normalizeMetricId(input.path)}`);
   if (input.collectionId) increments.push(`${collectionPrefix}${normalizeMetricId(input.collectionId)}`);
   if (input.postId) increments.push(`${postPrefix}${normalizeMetricId(input.postId)}`);
@@ -48,6 +49,25 @@ async function getAnalyticsSnapshot(env, collections, posts) {
       ...emptyAnalyticsSnapshot(collections, posts, false),
       error: getErrorMessage(error)
     };
+  }
+}
+async function getAnalyticsDateRange(env, startDate, endDate) {
+  if (!env?.ANALYTICS) return 0;
+  try {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const dates = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      dates.push(d.toISOString().split("T")[0]);
+    }
+    if (dates.length > 100) {
+      throw new Error("Date range too large (max 100 days)");
+    }
+    const counts = await Promise.all(dates.map((date) => getCounter(env, `${totalKey}:${date}`)));
+    return counts.reduce((sum, count) => sum + count, 0);
+  } catch (error) {
+    console.warn(`[WARN] Failed to get analytics date range: ${getErrorMessage(error)}`);
+    return 0;
   }
 }
 async function incrementCounter(env, key) {
@@ -114,4 +134,4 @@ function getErrorMessage(error) {
   return error instanceof Error ? error.message : "Unknown error";
 }
 
-export { getAnalyticsSnapshot as g, trackView as t };
+export { getAnalyticsDateRange as a, getAnalyticsSnapshot as g, trackView as t };

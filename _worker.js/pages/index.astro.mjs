@@ -1,6 +1,6 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { a as createComponent, c as createAstro, r as renderComponent, b as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_DBcCZzNC.mjs';
-import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_BU8nfYAa.mjs';
+import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_ed7hj2LY.mjs';
 import { w as withBase } from '../chunks/urls_Bz0TJc3Q.mjs';
 /* empty css                                 */
 import { a as getImages, f as featuredCollectionId, $ as $$PhotoGrid } from '../chunks/imageStore_BEn4EGd3.mjs';

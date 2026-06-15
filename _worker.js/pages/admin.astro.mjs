@@ -1,9 +1,9 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { c as createAstro, a as createComponent, m as maybeRenderHead, b as renderTemplate, r as renderComponent, d as addAttribute, F as Fragment } from '../chunks/astro/server_DBcCZzNC.mjs';
-import { $ as $$MainLayout } from '../chunks/MainLayout_BU8nfYAa.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_ed7hj2LY.mjs';
 import { a as $$AdminAlerts, $ as $$AdminHeader, b as $$AdminNav } from '../chunks/AdminNav_CBzmzen8.mjs';
 import { i as isAdminAuthenticated, h as hasAdminConfig, g as getAdminUsername } from '../chunks/adminAuth_BPmTUUIX.mjs';
-import { g as getAnalyticsSnapshot } from '../chunks/analytics_B7nIbTL1.mjs';
+import { g as getAnalyticsSnapshot, a as getAnalyticsDateRange } from '../chunks/analytics_BHCbq6dd.mjs';
 import { g as getRuntimeEnv } from '../chunks/cloudflare_Dxf-Pucn.mjs';
 import { g as getAdminGalleryState } from '../chunks/galleryCms_BqZ0DBxM.mjs';
 import { w as withBase } from '../chunks/urls_Bz0TJc3Q.mjs';
@@ -29,6 +29,35 @@ const $$Index = createComponent(async ($$result, $$props, $$slots) => {
   const adminUsername = getAdminUsername(runtimeEnv);
   const state = isAuthenticated ? await getAdminGalleryState(runtimeEnv) : void 0;
   const analytics = isAuthenticated && state ? await getAnalyticsSnapshot(runtimeEnv, state.collections, state.posts) : void 0;
+  const dateFilter = Astro2.url.searchParams.get("dateFilter") || "all";
+  const startDateStr = Astro2.url.searchParams.get("start") || "";
+  const endDateStr = Astro2.url.searchParams.get("end") || "";
+  let filteredTotalViews = analytics?.totalViews || 0;
+  if (isAuthenticated && dateFilter !== "all" && runtimeEnv?.ANALYTICS) {
+    const endObj = /* @__PURE__ */ new Date();
+    let startObj = /* @__PURE__ */ new Date();
+    let validRange = true;
+    if (dateFilter === "today") ; else if (dateFilter === "week") {
+      startObj.setDate(endObj.getDate() - 7);
+    } else if (dateFilter === "month") {
+      startObj.setDate(endObj.getDate() - 30);
+    } else if (dateFilter === "custom" && startDateStr && endDateStr) {
+      startObj = new Date(startDateStr);
+      const endParsed = new Date(endDateStr);
+      if (!isNaN(endParsed.getTime()) && !isNaN(startObj.getTime())) {
+        endObj.setTime(endParsed.getTime());
+      } else {
+        validRange = false;
+      }
+    } else {
+      validRange = false;
+    }
+    if (validRange) {
+      const startStr = startObj.toISOString().split("T")[0];
+      const endStr = endObj.toISOString().split("T")[0];
+      filteredTotalViews = await getAnalyticsDateRange(runtimeEnv, startStr, endStr);
+    }
+  }
   const error = Astro2.url.searchParams.get("error");
   const success = Astro2.url.searchParams.get("success");
   const formatter = new Intl.NumberFormat("id-ID");
@@ -38,7 +67,7 @@ Tambahkan ADMIN_PASSWORD di environment variable sebelum login.
 D1 binding DB belum tersedia. CRUD CMS membutuhkan binding ini.
 </p>`} ${analytics && !analytics.hasAnalytics && renderTemplate`<p class="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
 KV binding ANALYTICS belum tersedia atau belum bisa dibaca.
-</p>`} ${state && analytics && renderTemplate`${renderComponent($$result3, "Fragment", Fragment, {}, { "default": async ($$result4) => renderTemplate` <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <p class="text-sm text-zinc-500">Total website views</p> <p class="mt-3 text-3xl font-semibold">${formatter.format(analytics.totalViews)}</p> </div> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <p class="text-sm text-zinc-500">Collections</p> <p class="mt-3 text-3xl font-semibold">${formatter.format(state.collections.length)}</p> </div> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <p class="text-sm text-zinc-500">CMS posts</p> <p class="mt-3 text-3xl font-semibold">${formatter.format(state.posts.length)}</p> </div> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <p class="text-sm text-zinc-500">Gallery items</p> <p class="mt-3 text-3xl font-semibold">${formatter.format(state.imageCount)}</p> </div> </div> <div class="grid gap-6 xl:grid-cols-2"> ${renderComponent($$result4, "MetricPanel", $$MetricPanel, { "title": "Views per page", "metrics": analytics.pageViews, "empty": "Belum ada page view." })} ${renderComponent($$result4, "MetricPanel", $$MetricPanel, { "title": "Views per collection", "metrics": analytics.collectionViews, "empty": "Belum ada collection view." })} ${renderComponent($$result4, "MetricPanel", $$MetricPanel, { "title": "Views per post", "metrics": analytics.postViews, "empty": "Belum ada post view." })} </div> ` })}`} </main> </div> ` })}`} </div> </section> ` })}`;
+</p>`} ${state && analytics && renderTemplate`${renderComponent($$result3, "Fragment", Fragment, {}, { "default": async ($$result4) => renderTemplate` <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2"> <h2 class="text-lg font-semibold">Dashboard Overview</h2> <form method="get" class="flex flex-wrap items-center gap-3"${addAttribute(`{ filter: '${dateFilter}' }`, "x-data")}> <select name="dateFilter" x-model="filter" class="rounded-md border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-zinc-900 bg-white" onchange="if(this.value !== 'custom') this.form.submit()"> <option value="all">All Time</option> <option value="today">Today</option> <option value="week">This Week</option> <option value="month">This Month</option> <option value="custom">Custom Range</option> </select> <div x-show="filter === 'custom'" class="flex items-center gap-2" style="display: none;"> <input type="date" name="start"${addAttribute(startDateStr, "value")} class="rounded-md border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-zinc-900"> <span class="text-zinc-500 text-sm">to</span> <input type="date" name="end"${addAttribute(endDateStr, "value")} class="rounded-md border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-zinc-900"> <button type="submit" class="rounded-md bg-zinc-900 px-3 py-1 text-sm text-white hover:bg-zinc-800">Apply</button> </div> </form> </div> <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm relative overflow-hidden"> <p class="text-sm text-zinc-500">Website Visitors <span class="text-xs text-zinc-400">(${dateFilter})</span></p> <p class="mt-3 text-3xl font-semibold">${formatter.format(filteredTotalViews)}</p> </div> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <p class="text-sm text-zinc-500">Collections</p> <p class="mt-3 text-3xl font-semibold">${formatter.format(state.collections.length)}</p> </div> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <p class="text-sm text-zinc-500">CMS posts</p> <p class="mt-3 text-3xl font-semibold">${formatter.format(state.posts.length)}</p> </div> <div class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm"> <p class="text-sm text-zinc-500">Gallery items</p> <p class="mt-3 text-3xl font-semibold">${formatter.format(state.imageCount)}</p> </div> </div> <div class="grid gap-6 xl:grid-cols-2"> ${renderComponent($$result4, "MetricPanel", $$MetricPanel, { "title": "Views per page", "metrics": analytics.pageViews, "empty": "Belum ada page view." })} ${renderComponent($$result4, "MetricPanel", $$MetricPanel, { "title": "Views per collection", "metrics": analytics.collectionViews, "empty": "Belum ada collection view." })} ${renderComponent($$result4, "MetricPanel", $$MetricPanel, { "title": "Views per post", "metrics": analytics.postViews, "empty": "Belum ada post view." })} </div> ` })}`} </main> </div> ` })}`} </div> </section> ` })}`;
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/admin/index.astro", void 0);
 
 const $$file = "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/admin/index.astro";
