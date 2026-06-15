@@ -8,7 +8,7 @@ const defaultSiteContent = {
     "Merayakan Gelar, Mengabadikan Moment",
     "Frame Your Achievement"
   ].join("\n"),
-  heroImage: "/images/profile.webp",
+  heroImage: "https://rivaldy.pages.dev/api/gallery/image/site-content/hero/1000411107-1781550259330-879382e5-2764-49c4-93b8-94bc9135946c.webp",
   aboutImage: "/images/profile.webp",
   aboutText: [
     "Hi, I'm Sara Richard.",

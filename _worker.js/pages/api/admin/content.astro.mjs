@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { i as isAdminAuthenticated } from '../../../chunks/adminAuth_BPmTUUIX.mjs';
 import { g as getRuntimeEnv } from '../../../chunks/cloudflare_Dxf-Pucn.mjs';
-import { u as updateSiteContent } from '../../../chunks/siteCms_B1R7PNz1.mjs';
+import { u as updateSiteContent } from '../../../chunks/siteCms_DgJO4Dqu.mjs';
 import { w as withBase } from '../../../chunks/urls_Bz0TJc3Q.mjs';
 export { renderers } from '../../../renderers.mjs';
 

@@ -1,11 +1,11 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { a as createComponent, c as createAstro, r as renderComponent, b as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_C894EArb.mjs';
-import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_C2YXzli1.mjs';
+import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_CxHy3gpz.mjs';
 import { w as withBase } from '../chunks/urls_Bz0TJc3Q.mjs';
 /* empty css                                 */
 import { a as getImages, f as featuredCollectionId, $ as $$PhotoGrid } from '../chunks/imageStore_D7uUB0-D.mjs';
 import { g as getRuntimeEnv } from '../chunks/cloudflare_Dxf-Pucn.mjs';
-import { g as getSiteContent } from '../chunks/siteCms_B1R7PNz1.mjs';
+import { g as getSiteContent } from '../chunks/siteCms_DgJO4Dqu.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Astro$4 = createAstro("https://rivaldy-portfolio.pages.dev");
@@ -22,19 +22,12 @@ const $$LandingHero2 = createComponent(($$result, $$props, $$slots) => {
   const { content } = Astro2.props;
   const heroSubtitles = content.heroTagline.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const title = content.heroTitle;
-  const subtitleLabel = heroSubtitles.join(", ");
-  return renderTemplate`${maybeRenderHead()}<div class="absolute top-[80px] bottom-[120px] left-0 right-0 z-0"${addAttribute({
+  return renderTemplate`<!-- Full Screen Hero Image Background -->${maybeRenderHead()}<div class="absolute inset-0 z-0 overflow-hidden" data-astro-cid-uvdrwbr5> <div class="absolute inset-0 bg-black/40 scale-105 animate-[slowZoom_20s_ease-out_forwards]"${addAttribute({
     backgroundImage: `url(${withBase(content.heroImage)})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
-    backgroundRepeat: "no-repeat",
-    opacity: 0.6
-  }, "style")} data-astro-cid-uvdrwbr5></div> <div class="container text-left mb-32 relative z-10" data-astro-cid-uvdrwbr5> <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight" data-astro-cid-uvdrwbr5> <span class="font-brand" data-astro-cid-uvdrwbr5>${title}</span> </h1> <p class="hero-subtitle-rotator mt-4 text-base md:text-lg text-gray-700"${addAttribute(subtitleLabel, "aria-label")} data-astro-cid-uvdrwbr5> ${heroSubtitles.map((subtitle) => renderTemplate`<span data-astro-cid-uvdrwbr5>${subtitle}</span>`)} </p> <a${addAttribute(withBase("collections"), "href")} class="mt-8 inline-block px-6 py-3 border-2 border-black rounded-md
-                      hover:bg-black hover:text-white transition-all duration-300
-                      text-sm md:text-base font-medium
-                      transform hover:scale-105 active:scale-95" data-astro-cid-uvdrwbr5>
-View Gallery
-</a> </div> `;
+    backgroundRepeat: "no-repeat"
+  }, "style")} data-astro-cid-uvdrwbr5></div> <!-- Cinematic Vignette / Overlay --> <div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/80 pointer-events-none" data-astro-cid-uvdrwbr5></div> </div> <!-- Content --> <div class="container-custom relative z-10 w-full h-full flex flex-col items-center justify-center text-center pt-32 pb-40" data-astro-cid-uvdrwbr5> <div class="mb-6 flex items-center justify-center gap-4 animate-fade-in-up" data-astro-cid-uvdrwbr5> <div class="h-[1px] w-8 md:w-16 bg-white/70" data-astro-cid-uvdrwbr5></div> <span class="text-xs md:text-sm tracking-[0.3em] uppercase text-white/90 font-light" data-astro-cid-uvdrwbr5>Portfolio</span> <div class="h-[1px] w-8 md:w-16 bg-white/70" data-astro-cid-uvdrwbr5></div> </div> <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight mb-6 font-playfair tracking-tight text-white drop-shadow-2xl animate-fade-in-up" style="animation-delay: 0.2s;" data-astro-cid-uvdrwbr5> ${title} </h1> <div class="h-12 relative overflow-hidden mb-12 w-full animate-fade-in-up" style="animation-delay: 0.4s;" data-astro-cid-uvdrwbr5> <div class="hero-subtitle-rotator text-lg md:text-2xl text-gray-200 font-light italic font-playfair drop-shadow-md" data-astro-cid-uvdrwbr5> ${heroSubtitles.map((subtitle) => renderTemplate`<span data-astro-cid-uvdrwbr5>${subtitle}</span>`)} </div> </div> <a${addAttribute(withBase("collections"), "href")} class="group inline-flex items-center gap-4 text-sm tracking-[0.15em] uppercase font-medium text-white hover:text-gray-300 transition-colors animate-fade-in-up" style="animation-delay: 0.6s;" data-astro-cid-uvdrwbr5> <span class="border-b border-white/50 pb-1 group-hover:border-white transition-colors" data-astro-cid-uvdrwbr5>Explore Gallery</span> <svg class="w-5 h-5 transform group-hover:translate-y-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-astro-cid-uvdrwbr5> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" data-astro-cid-uvdrwbr5></path> </svg> </a> </div> `;
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/components/LandingHero-2.astro", void 0);
 
 const $$Astro$2 = createAstro("https://rivaldy-portfolio.pages.dev");
@@ -79,7 +72,7 @@ const $$Index = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$Index;
   const content = await getSiteContent(getRuntimeEnv(Astro2.locals));
-  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "ogImage": content.heroImage }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="relative min-h-screen items-center flex py-20 md:py-16 overflow-hidden"> ${renderComponent($$result2, "LandingHero", $$LandingHero2, { "content": content })} ${renderComponent($$result2, "FeaturedWorkScroll", $$FeaturedWorkScroll, {})} </section> <section class="featured-section py-20"> ${renderComponent($$result2, "FeaturedGallery", $$FeaturedGallery, {})} </section> ${renderComponent($$result2, "Pricelist", $$Pricelist, { "packages": content.pricelist })} ` })}`;
+  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "ogImage": content.heroImage, "navTheme": "dark" }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="relative min-h-screen items-center flex py-20 md:py-16 overflow-hidden"> ${renderComponent($$result2, "LandingHero", $$LandingHero2, { "content": content })} ${renderComponent($$result2, "FeaturedWorkScroll", $$FeaturedWorkScroll, {})} </section> <section class="featured-section py-20"> ${renderComponent($$result2, "FeaturedGallery", $$FeaturedGallery, {})} </section> ${renderComponent($$result2, "Pricelist", $$Pricelist, { "packages": content.pricelist })} ` })}`;
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/index.astro", void 0);
 
 const $$file = "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/index.astro";
