@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { renderers } from './renderers.mjs';
 import { c as createExports, s as serverEntrypointModule } from './chunks/_@astrojs-ssr-adapter_CEIvTICc.mjs';
-import { manifest } from './manifest_B8RVPim3.mjs';
+import { manifest } from './manifest_CFf7GlLI.mjs';
 
 const serverIslandMap = new Map();;
 
@@ -24,11 +24,12 @@ const _page15 = () => import('./pages/api/admin/login.astro.mjs');
 const _page16 = () => import('./pages/api/admin/logout.astro.mjs');
 const _page17 = () => import('./pages/api/admin/posts.astro.mjs');
 const _page18 = () => import('./pages/api/admin/pricelist.astro.mjs');
-const _page19 = () => import('./pages/api/admin/upload.astro.mjs');
-const _page20 = () => import('./pages/api/analytics/view.astro.mjs');
-const _page21 = () => import('./pages/api/gallery/image/_---key_.astro.mjs');
-const _page22 = () => import('./pages/collections/_---collection_.astro.mjs');
-const _page23 = () => import('./pages/index.astro.mjs');
+const _page19 = () => import('./pages/api/admin/reset-analytics.astro.mjs');
+const _page20 = () => import('./pages/api/admin/upload.astro.mjs');
+const _page21 = () => import('./pages/api/analytics/view.astro.mjs');
+const _page22 = () => import('./pages/api/gallery/image/_---key_.astro.mjs');
+const _page23 = () => import('./pages/collections/_---collection_.astro.mjs');
+const _page24 = () => import('./pages/index.astro.mjs');
 const pageMap = new Map([
     ["node_modules/astro/dist/assets/endpoint/generic.js", _page0],
     ["src/pages/about.astro", _page1],
@@ -49,11 +50,12 @@ const pageMap = new Map([
     ["src/pages/api/admin/logout.ts", _page16],
     ["src/pages/api/admin/posts.ts", _page17],
     ["src/pages/api/admin/pricelist.ts", _page18],
-    ["src/pages/api/admin/upload.ts", _page19],
-    ["src/pages/api/analytics/view.ts", _page20],
-    ["src/pages/api/gallery/image/[...key].ts", _page21],
-    ["src/pages/collections/[...collection].astro", _page22],
-    ["src/pages/index.astro", _page23]
+    ["src/pages/api/admin/reset-analytics.ts", _page19],
+    ["src/pages/api/admin/upload.ts", _page20],
+    ["src/pages/api/analytics/view.ts", _page21],
+    ["src/pages/api/gallery/image/[...key].ts", _page22],
+    ["src/pages/collections/[...collection].astro", _page23],
+    ["src/pages/index.astro", _page24]
 ]);
 
 const _manifest = Object.assign(manifest, {
