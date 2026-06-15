@@ -1,6 +1,6 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { c as createAstro, a as createComponent, r as renderComponent, b as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_C894EArb.mjs';
-import { $ as $$MainLayout } from '../chunks/MainLayout_Dlz4Tf9e.mjs';
+import { $ as $$MainLayout } from '../chunks/MainLayout_CK3zHkNE.mjs';
 import { g as getRuntimeEnv } from '../chunks/cloudflare_Bbc2K49a.mjs';
 import { g as getSiteContent } from '../chunks/siteCms_FRQACgl6.mjs';
 import { w as withBase } from '../chunks/urls_Bz0TJc3Q.mjs';

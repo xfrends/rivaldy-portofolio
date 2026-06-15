@@ -1,6 +1,6 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { a as createComponent, c as createAstro, r as renderComponent, b as renderTemplate, m as maybeRenderHead, d as addAttribute } from '../chunks/astro/server_C894EArb.mjs';
-import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_Dlz4Tf9e.mjs';
+import { a as $$, s as siteConfig, $ as $$MainLayout } from '../chunks/MainLayout_CK3zHkNE.mjs';
 import { w as withBase } from '../chunks/urls_Bz0TJc3Q.mjs';
 /* empty css                                 */
 import { a as getImages, f as featuredCollectionId, $ as $$PhotoGrid } from '../chunks/imageStore_D7uUB0-D.mjs';
@@ -81,7 +81,7 @@ const $$Index = createComponent(async ($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$Index;
   const content = await getSiteContent(getRuntimeEnv(Astro2.locals));
-  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, {}, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="relative min-h-screen items-center flex py-20 md:py-16 overflow-hidden"> ${renderComponent($$result2, "LandingHero", $$LandingHero2, { "content": content })} ${renderComponent($$result2, "FeaturedWorkScroll", $$FeaturedWorkScroll, {})} </section> <section class="featured-section py-20"> ${renderComponent($$result2, "FeaturedGallery", $$FeaturedGallery, {})} </section> ${renderComponent($$result2, "Pricelist", $$Pricelist, {})} ` })}`;
+  return renderTemplate`${renderComponent($$result, "MainLayout", $$MainLayout, { "ogImage": content.heroImage }, { "default": async ($$result2) => renderTemplate` ${maybeRenderHead()}<section class="relative min-h-screen items-center flex py-20 md:py-16 overflow-hidden"> ${renderComponent($$result2, "LandingHero", $$LandingHero2, { "content": content })} ${renderComponent($$result2, "FeaturedWorkScroll", $$FeaturedWorkScroll, {})} </section> <section class="featured-section py-20"> ${renderComponent($$result2, "FeaturedGallery", $$FeaturedGallery, {})} </section> ${renderComponent($$result2, "Pricelist", $$Pricelist, {})} ` })}`;
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/index.astro", void 0);
 
 const $$file = "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/pages/index.astro";

@@ -7,6 +7,7 @@
     "/_astro/*",
     "/.nojekyll",
     "/favicon.ico",
+    "/favicon.svg",
     "/images/*"
   ]
 }

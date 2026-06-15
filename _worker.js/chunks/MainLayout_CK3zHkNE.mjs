@@ -43,8 +43,9 @@ const $$MessageCircle = createComponent(($$result, $$props, $$slots) => {
 
 const siteConfig = {
   title: "Rivaldy Ahnaf Abida",
-  favicon: "favicon.ico",
+  favicon: "favicon.svg",
   owner: "A Photo by Rvldy",
+  profileImage: "profile.webp",
   socialLinks: [
     {
       name: "WhatsApp",
@@ -95,9 +96,13 @@ const $$Astro = createAstro("https://rivaldy-portfolio.pages.dev");
 const $$MainLayout = createComponent(($$result, $$props, $$slots) => {
   const Astro2 = $$result.createAstro($$Astro, $$props, $$slots);
   Astro2.self = $$MainLayout;
-  const owner = siteConfig.owner;
+  const {
+    title = siteConfig.title,
+    description = siteConfig.owner,
+    ogImage = siteConfig.profileImage
+  } = Astro2.props;
   const favicon = siteConfig.favicon;
-  return renderTemplate(_a || (_a = __template(['<html lang="en" class="h-full"> <head><meta charset="utf-8"><link rel="icon" type="image/x-icon"', '><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet"><meta name="viewport" content="width=device-width"><meta name="generator"', "><title>", "</title>", "</head> <body> ", " <main> ", " </main> ", ' <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"><\/script> ', "</body></html>"])), addAttribute(withBase(favicon), "href"), addAttribute(Astro2.generator, "content"), owner, renderHead(), renderComponent($$result, "NavBar", $$NavBar, {}), renderSlot($$result, $$slots["default"]), renderComponent($$result, "Footer", $$Footer, {}), renderScript($$result, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/layouts/MainLayout.astro?astro&type=script&index=0&lang.ts"));
+  return renderTemplate(_a || (_a = __template(['<html lang="en" class="h-full"> <head><meta charset="utf-8"><link rel="icon" type="image/svg+xml"', '><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet"><meta name="viewport" content="width=device-width"><meta name="generator"', "><title>", '</title><meta name="description"', '><!-- Open Graph / Social Meta Tags --><meta property="og:title"', '><meta property="og:description"', '><meta property="og:image"', '><meta property="og:type" content="website">', "</head> <body> ", " <main> ", " </main> ", ' <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"><\/script> ', "</body></html>"])), addAttribute(withBase(favicon), "href"), addAttribute(Astro2.generator, "content"), title, addAttribute(description, "content"), addAttribute(title, "content"), addAttribute(description, "content"), addAttribute(withBase(ogImage), "content"), renderHead(), renderComponent($$result, "NavBar", $$NavBar, {}), renderSlot($$result, $$slots["default"]), renderComponent($$result, "Footer", $$Footer, {}), renderScript($$result, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/layouts/MainLayout.astro?astro&type=script&index=0&lang.ts"));
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/layouts/MainLayout.astro", void 0);
 
 export { $$MainLayout as $, $$ as a, siteConfig as s };
