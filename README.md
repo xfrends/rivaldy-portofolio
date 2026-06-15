@@ -92,8 +92,9 @@ npm run preview:pages
 
 ## 📝 Cara Mengelola Konten
 
-- **Admin CMS**: buka `/admin`, lalu kelola data dari menu Dashboard, Content, Collections, dan Posts.
+- **Admin CMS**: buka `/admin`, lalu kelola data dari menu Dashboard, Content, Pricelist, Collections, dan Posts.
 - **Content**: hero title, hero tagline, hero image, about image, dan about text disimpan di Cloudflare D1 melalui binding `DB`.
+- **Pricelist**: paket harga, fitur, status popular, dan show/hide paket disimpan di Cloudflare D1 melalui binding `DB`.
 - **Collections**: data collection disimpan di Cloudflare D1 melalui binding `DB`.
 - **Posts**: data post, relasi collection, title, description, dan metadata image disimpan di D1.
 - **Images**: file gambar disimpan di R2 melalui binding `GALLERY_BUCKET`; upload dari admin dikonversi ke WebP di frontend sebelum dikirim.

@@ -9,8 +9,18 @@ export interface SiteContent {
 	heroImage: string;
 	aboutImage: string;
 	aboutText: string;
+	pricelist: PricelistPackage[];
 	hasDb: boolean;
 	hasBucket: boolean;
+}
+
+export interface PricelistPackage {
+	id: string;
+	name: string;
+	price: string;
+	features: string[];
+	popular: boolean;
+	enabled: boolean;
 }
 
 export interface UpdateSiteContentInput {
@@ -19,6 +29,11 @@ export interface UpdateSiteContentInput {
 	heroImage: File | null;
 	aboutImage: File | null;
 	aboutText: string;
+	env?: RuntimeEnv;
+}
+
+export interface UpdatePricelistInput {
+	packages: PricelistPackage[];
 	env?: RuntimeEnv;
 }
 
@@ -43,6 +58,53 @@ const defaultSiteContent: SiteContent = {
 		'',
 		'My approach to photography centers on finding the extraordinary in ordinary moments. I believe that beauty exists everywhere in urban streets, remote wilderness, and human connections.',
 	].join('\n'),
+	pricelist: [
+		{
+			id: 'basic',
+			name: 'Basic',
+			price: '275K',
+			features: [
+				'Photo session 1 jam (Include foto keluarga, foto teman, foto individu - lebih banyak foto individu)',
+				'Best Soft file & selection edited send by Google Drive (same day)',
+			],
+			popular: false,
+			enabled: true,
+		},
+		{
+			id: 'premium',
+			name: 'Premium',
+			price: '330K',
+			features: [
+				'Photo Session 1 jam (Include foto keluarga, foto teman, foto individu)',
+				'All soft file mentahan & Edited Request send by Google Drive',
+			],
+			popular: false,
+			enabled: true,
+		},
+		{
+			id: 'pertamax',
+			name: 'Pertamax',
+			price: '380K',
+			features: [
+				'Photo Session 1 Jam 45 menit',
+				'All soft file mentahan & Req edit send by Google Drive',
+			],
+			popular: true,
+			enabled: true,
+		},
+		{
+			id: 'exclusive',
+			name: 'Exclusive',
+			price: '550K',
+			features: [
+				'Photo Session Fleksibel',
+				'Fotografer membawa aksesoris 2 Lightning, 1 Balon Fire',
+				'Include Foto keluarga, foto dengan teman, foto individu',
+			],
+			popular: false,
+			enabled: true,
+		},
+	],
 	hasDb: false,
 	hasBucket: false,
 };
@@ -66,6 +128,7 @@ export async function getSiteContent(env?: RuntimeEnv): Promise<SiteContent> {
 			heroImage: values.hero_image || defaultSiteContent.heroImage,
 			aboutImage: values.about_image || defaultSiteContent.aboutImage,
 			aboutText: values.about_text || defaultSiteContent.aboutText,
+			pricelist: parsePricelist(values.pricelist_json),
 			hasDb: true,
 			hasBucket: Boolean(env.GALLERY_BUCKET),
 		};
@@ -98,6 +161,14 @@ export async function updateSiteContent(input: UpdateSiteContentInput): Promise<
 		upsertContentValue(db, 'about_image', aboutImage),
 		upsertContentValue(db, 'about_text', input.aboutText.trim() || defaultSiteContent.aboutText),
 	]);
+}
+
+export async function updatePricelist(input: UpdatePricelistInput): Promise<void> {
+	if (!input.env?.DB) throw new Error('D1 binding DB belum tersedia.');
+
+	await ensureSiteContentSchema(input.env.DB);
+	const packages = normalizePricelist(input.packages);
+	await upsertContentValue(input.env.DB, 'pricelist_json', JSON.stringify(packages));
 }
 
 async function ensureSiteContentSchema(db: D1DatabaseLike): Promise<void> {
@@ -186,4 +257,43 @@ function filenameBase(filename: string): string {
 
 function getErrorMessage(error: unknown): string {
 	return error instanceof Error ? error.message : 'Unknown error';
+}
+
+function parsePricelist(value: string | undefined): PricelistPackage[] {
+	if (!value) return defaultSiteContent.pricelist;
+
+	try {
+		return normalizePricelist(JSON.parse(value));
+	} catch {
+		return defaultSiteContent.pricelist;
+	}
+}
+
+function normalizePricelist(value: unknown): PricelistPackage[] {
+	if (!Array.isArray(value)) return defaultSiteContent.pricelist;
+
+	const packages = value
+		.map((item, index): PricelistPackage | null => {
+			if (!item || typeof item !== 'object') return null;
+			const record = item as Partial<PricelistPackage>;
+			const name = String(record.name || '').trim();
+			const price = String(record.price || '').trim();
+			const features = Array.isArray(record.features)
+				? record.features.map((feature) => String(feature).trim()).filter(Boolean)
+				: [];
+
+			if (!name || !price || features.length === 0) return null;
+
+			return {
+				id: slugify(String(record.id || name)) || `package-${index + 1}`,
+				name,
+				price,
+				features,
+				popular: Boolean(record.popular),
+				enabled: record.enabled !== false,
+			};
+		})
+		.filter((item): item is PricelistPackage => Boolean(item));
+
+	return packages.length > 0 ? packages : defaultSiteContent.pricelist;
 }

@@ -22,5 +22,5 @@ const content = await getSiteContent(getRuntimeEnv(Astro.locals));
 		<FeaturedGallery />
 	</section>
 
-	<Pricelist />
+	<Pricelist packages={content.pricelist} />
 </MainLayout>

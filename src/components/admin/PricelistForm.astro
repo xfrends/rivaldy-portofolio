@@ -1,0 +1,92 @@
+---
+import type { PricelistPackage } from '../../lib/siteCms';
+import { withBase } from '../../lib/urls';
+
+interface Props {
+	packages: PricelistPackage[];
+}
+
+const { packages } = Astro.props;
+const maxPackages = 8;
+const rows = [
+	...packages,
+	...Array.from({ length: Math.max(0, maxPackages - packages.length) }, (_, index) => ({
+		id: '',
+		name: '',
+		price: '',
+		features: [],
+		popular: false,
+		enabled: index === 0 && packages.length === 0,
+	})),
+].slice(0, maxPackages);
+---
+
+<form action={withBase('api/admin/pricelist')} method="post" class="space-y-5">
+	<div>
+		<h2 class="text-2xl font-semibold">Pricelist</h2>
+		<p class="text-sm text-zinc-500">Edit paket yang tampil di section pricelist halaman depan.</p>
+	</div>
+
+	<div class="space-y-4">
+		{
+			rows.map((pkg, index) => (
+				<section class="rounded-md border border-zinc-200 p-4">
+					<input type="hidden" name="indexes" value={String(index)} />
+					<input type="hidden" name={`id-${index}`} value={pkg.id} />
+
+					<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+						<h3 class="text-lg font-semibold">{pkg.name || `Package ${index + 1}`}</h3>
+						<div class="flex flex-wrap gap-3">
+							<label class="flex items-center gap-2 text-sm text-zinc-700">
+								<input name={`enabled-${index}`} type="checkbox" checked={pkg.enabled} class="accent-zinc-950" />
+								Show
+							</label>
+							<label class="flex items-center gap-2 text-sm text-zinc-700">
+								<input name={`popular-${index}`} type="checkbox" checked={pkg.popular} class="accent-zinc-950" />
+								Popular
+							</label>
+						</div>
+					</div>
+
+					<div class="grid gap-4 md:grid-cols-2">
+						<label class="block">
+							<span class="text-sm font-medium text-zinc-800">Package Name</span>
+							<input
+								name={`name-${index}`}
+								type="text"
+								value={pkg.name}
+								class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+							/>
+						</label>
+						<label class="block">
+							<span class="text-sm font-medium text-zinc-800">Price</span>
+							<input
+								name={`price-${index}`}
+								type="text"
+								value={pkg.price}
+								placeholder="275K"
+								class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+							/>
+						</label>
+					</div>
+
+					<label class="mt-4 block">
+						<span class="text-sm font-medium text-zinc-800">Features</span>
+						<textarea
+							name={`features-${index}`}
+							rows="5"
+							placeholder="Tulis satu fitur per baris"
+							class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+						>{pkg.features.join('\n')}</textarea>
+					</label>
+				</section>
+			))
+		}
+	</div>
+
+	<div class="flex justify-end">
+		<button type="submit" class="rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white">
+			Save Pricelist
+		</button>
+	</div>
+</form>
