@@ -112,22 +112,34 @@ const formatter = new Intl.NumberFormat('id-ID');
 									<>
 										<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-2">
 											<h2 class="text-lg font-semibold">Dashboard Overview</h2>
-											<form method="get" class="flex flex-wrap items-center gap-3" x-data={`{ filter: '${dateFilter}' }`}>
-												<select name="dateFilter" x-model="filter" class="rounded-md border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-zinc-900 bg-white" onchange="if(this.value !== 'custom') this.form.submit()">
-													<option value="all">All Time</option>
-													<option value="today">Today</option>
-													<option value="week">This Week</option>
-													<option value="month">This Month</option>
-													<option value="custom">Custom Range</option>
-												</select>
+											<div class="flex flex-wrap items-center gap-3">
+												<form method="get" class="flex flex-wrap items-center gap-3" x-data={`{ filter: '${dateFilter}' }`}>
+													<select name="dateFilter" x-model="filter" class="rounded-md border border-zinc-300 px-3 py-1.5 text-sm outline-none focus:border-zinc-900 bg-white" onchange="if(this.value !== 'custom') this.form.submit()">
+														<option value="all">All Time</option>
+														<option value="today">Today</option>
+														<option value="week">This Week</option>
+														<option value="month">This Month</option>
+														<option value="custom">Custom Range</option>
+													</select>
+													
+													<div x-show="filter === 'custom'" class="flex items-center gap-2" style="display: none;">
+														<input type="date" name="start" value={startDateStr} class="rounded-md border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-zinc-900" />
+														<span class="text-zinc-500 text-sm">to</span>
+														<input type="date" name="end" value={endDateStr} class="rounded-md border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-zinc-900" />
+														<button type="submit" class="rounded-md bg-zinc-900 px-3 py-1 text-sm text-white hover:bg-zinc-800">Apply</button>
+													</div>
+												</form>
 												
-												<div x-show="filter === 'custom'" class="flex items-center gap-2" style="display: none;">
-													<input type="date" name="start" value={startDateStr} class="rounded-md border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-zinc-900" />
-													<span class="text-zinc-500 text-sm">to</span>
-													<input type="date" name="end" value={endDateStr} class="rounded-md border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-zinc-900" />
-													<button type="submit" class="rounded-md bg-zinc-900 px-3 py-1 text-sm text-white hover:bg-zinc-800">Apply</button>
-												</div>
-											</form>
+												<button 
+													@click="$dispatch('open-reset-modal')"
+													class="rounded-md bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700 transition-colors flex items-center gap-2 shadow-sm"
+												>
+													<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+														<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+													</svg>
+													Reset
+												</button>
+											</div>
 										</div>
 
 										<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -156,6 +168,60 @@ const formatter = new Intl.NumberFormat('id-ID');
 									</>
 								)}
 							</main>
+						</div>
+						
+						<!-- Reset Confirmation Modal -->
+						<div 
+							x-data="{ open: false, password: '', loading: false }"
+							@open-reset-modal.window="open = true"
+							x-show="open" 
+							class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+							style="display: none;"
+						>
+							<div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6" @click.away="if(!loading) open = false">
+								<h3 class="text-xl font-bold text-red-600 mb-2">Peringatan!</h3>
+								<p class="text-zinc-600 mb-4 text-sm">
+									Anda yakin ingin menghapus <strong>SEMUA</strong> data analytics? Aksi ini bersifat permanen dan tidak dapat dibatalkan.
+								</p>
+								<label class="block mb-4">
+									<span class="text-sm font-medium text-zinc-800">Masukkan Password Admin</span>
+									<input x-model="password" type="password" placeholder="Password..." class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-2 text-base outline-none focus:border-red-500" />
+								</label>
+								<div class="flex justify-end gap-3 mt-6">
+									<button @click="open = false; password = ''" :disabled="loading" class="px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 rounded-md transition-colors">
+										Batal
+									</button>
+									<button 
+										@click="async () => {
+											if(!password) { alert('Password wajib diisi!'); return; }
+											loading = true;
+											try {
+												const response = await fetch('/api/admin/reset-analytics', {
+													method: 'POST',
+													headers: { 'Content-Type': 'application/json' },
+													body: JSON.stringify({ password })
+												});
+												const result = await response.json();
+												if (result.success) {
+													alert(result.message);
+													window.location.reload();
+												} else {
+													alert('Gagal: ' + result.error);
+													loading = false;
+													password = '';
+												}
+											} catch(e) {
+												alert('Terjadi kesalahan: ' + e.message);
+												loading = false;
+											}
+										}"
+										:disabled="loading" 
+										class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+										x-text="loading ? 'Resetting...' : 'Konfirmasi Reset'"
+									>
+									</button>
+								</div>
+							</div>
 						</div>
 					</>
 				)

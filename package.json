@@ -6,6 +6,7 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"cf:setup": "node scripts/setup-cloudflare-resources.mjs",
+		"cf:reset": "node scripts/reset-analytics.mjs",
 		"preview": "astro preview",
 		"preview:pages": "wrangler pages dev dist --r2=GALLERY_BUCKET --kv=SESSION --kv=ANALYTICS --d1=DB",
 		"deploy:pages": "wrangler pages deploy dist",
