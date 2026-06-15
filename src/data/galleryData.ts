@@ -31,6 +31,7 @@ export interface Collection {
  */
 export interface GalleryImage {
 	path: string;
+	additionalPaths?: string[];
 	meta: Meta;
 	exif?: ImageExif;
 }
@@ -71,12 +72,14 @@ export interface ImageExif {
 /**
  * Represents a processed image with metadata
  * @property {ImageMetadata} src - Image source metadata from Astro
+ * @property {ImageMetadata[]} additionalSrcs - Image sources for carousel
  * @property {string} alt - Alt text for accessibility
  * @property {string} description - Detailed description of the image
  * @property {string[]} collections - Array of collection IDs the image belongs to
  */
 export interface Image {
 	src: ImageMetadata;
+	additionalSrcs?: ImageMetadata[];
 	title: string;
 	description: string;
 	collections: string[];

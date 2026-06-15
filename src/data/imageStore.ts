@@ -134,7 +134,7 @@ const processImages = (images: GalleryImage[], galleryPath: string): Image[] => 
 	return images.reduce<Image[]>((acc, imageEntry) => {
 		const imagePath = path.posix.join('/', path.parse(galleryPath).dir, imageEntry.path);
 		try {
-			acc.push(createImageDataFor(imagePath, imageEntry));
+			acc.push(createImageDataFor(imagePath, imageEntry, galleryPath));
 		} catch (error) {
 			console.warn(`[WARN] ${getErrorMsgFrom(error)}`);
 		}
@@ -149,15 +149,29 @@ const processImages = (images: GalleryImage[], galleryPath: string): Image[] => 
  * @returns {Image} Processed image with metadata
  * @throws {ImageStoreError} If image module cannot be found
  */
-const createImageDataFor = (imagePath: string, img: GalleryImage): Image => {
+const createImageDataFor = (imagePath: string, img: GalleryImage, galleryPath: string): Image => {
 	const imageModule = imageModules[imagePath] as ImageModule | undefined;
 
 	if (!imageModule) {
 		throw new ImageStoreError(`Image not found: ${imagePath}`);
 	}
 
+	let additionalSrcs: import('astro').ImageMetadata[] = [];
+	if (img.additionalPaths && img.additionalPaths.length > 0) {
+		additionalSrcs = img.additionalPaths.map(addPath => {
+			const addFullPath = path.posix.join('/', path.parse(galleryPath).dir, addPath);
+			const addMod = imageModules[addFullPath] as ImageModule | undefined;
+			if (!addMod) {
+				console.warn(`[WARN] Additional image not found: ${addFullPath}`);
+				return null;
+			}
+			return addMod.default;
+		}).filter((item): item is import('astro').ImageMetadata => item !== null);
+	}
+
 	return {
 		src: imageModule.default,
+		...(additionalSrcs.length > 0 && { additionalSrcs }),
 		title: img.meta.title,
 		description: img.meta.description,
 		collections: img.meta.collections,

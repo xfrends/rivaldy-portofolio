@@ -7,6 +7,9 @@ collections:
     name: Party
 images:
   - path: graduation/nature-2.jpg
+    additionalPaths:
+      - graduation/nature-3.jpg
+      - graduation/nature-5.jpg
     meta:
       title: Nature scene 2
       description: Serene natural landscape capturing the essence of wilderness.
