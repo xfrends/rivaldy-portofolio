@@ -14,7 +14,7 @@ const title = content.heroTitle;
 <!-- Full Screen Hero Image Background -->
 <div class="absolute inset-0 z-0 overflow-hidden">
 	<div
-		class="absolute inset-0 bg-black/40 scale-105 animate-[slowZoom_20s_ease-out_forwards]"
+		class="absolute inset-0 scale-105 animate-[slowZoom_20s_ease-out_forwards]"
 		style={{
 			backgroundImage: `url(${withBase(content.heroImage)})`,
 			backgroundSize: 'cover',
@@ -23,8 +23,10 @@ const title = content.heroTitle;
 		}}
 	>
 	</div>
+	<!-- Dark Overlay to make text pop -->
+	<div class="absolute inset-0 bg-black/50 pointer-events-none"></div>
 	<!-- Cinematic Vignette / Overlay -->
-	<div class="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/80 pointer-events-none"></div>
+	<div class="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/90 pointer-events-none"></div>
 </div>
 
 <!-- Content -->

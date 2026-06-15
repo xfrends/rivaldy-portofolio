@@ -10,28 +10,61 @@ const content = await getSiteContent(getRuntimeEnv(Astro.locals));
 const aboutParagraphs = content.aboutText.split(/\n{2,}/).map((paragraph) => paragraph.trim()).filter(Boolean);
 ---
 
-<MainLayout>
-	<section class="pt-32 pb-20">
-		<div class="container-custom">
-			<div class="max-w-2xl mx-auto text-center mb-16">
-				<h1 class="text-4xl md:text-5xl font-bold mb-4">About Me</h1>
+<MainLayout title={`About - ${content.heroTitle}`}>
+	<section class="min-h-screen bg-white pt-32 pb-32">
+		<div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+			
+			<div class="flex flex-col items-center text-center">
+			<div 
+				class="max-w-3xl mx-auto text-center mb-16 transition-all duration-1000 ease-out"
+				x-data="{ shown: false }" 
+				x-intersect.once="shown = true" 
+				:class="shown ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+			>
+				<h2 class="text-3xl md:text-4xl font-playfair font-normal mb-4 tracking-wide text-black">About the Photographer</h2>
+				<div class="w-12 h-[1px] bg-black mx-auto mb-6"></div>
+				<p class="text-gray-500 font-light text-lg">My journey behind the lens</p>
 			</div>
 
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-				<div>
+				<!-- Pure, unstyled image focusing only on the photo -->
+				<div class="w-full max-w-2xl mb-20 animate-fade-in-up">
 					<img
 						src={withBase(content.aboutImage)}
-						alt="Profile image"
-						class="w-full h-auto rounded-lg shadow-lg border-8 my-4 border-white md:p-4"
-						width="720"
-						height="720"
+						alt="Portrait of the Photographer"
+						class="w-full h-auto object-cover"
+						width="800"
+						height="1000"
 					/>
 				</div>
 
-				<div class="prose text-gray-700 mb-6">
-					{aboutParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+				<!-- Artist Statement / Bio -->
+				<div class="max-w-2xl mx-auto text-center animate-fade-in-up" style="animation-delay: 0.2s;">
+					<div class="prose prose-lg text-gray-800 leading-loose font-light mx-auto">
+						{aboutParagraphs.map((paragraph) => (
+							<p class="mb-8 font-sans">
+								{paragraph}
+							</p>
+						))}
+					</div>
+					
+					<div class="mt-16 flex justify-center">
+						<div class="w-12 h-[1px] bg-black"></div>
+					</div>
 				</div>
 			</div>
+
 		</div>
 	</section>
 </MainLayout>
+
+<style>
+	.animate-fade-in-up {
+		opacity: 0;
+		animation: fadeInUp 1.2s ease-out forwards;
+	}
+
+	@keyframes fadeInUp {
+		from { opacity: 0; transform: translateY(20px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+</style>

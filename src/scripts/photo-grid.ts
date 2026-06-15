@@ -46,6 +46,8 @@ interface LayoutBox {
 	forcedAspectRatio?: boolean;
 }
 
+let lightboxInstance: any = null;
+
 export async function setupGallery() {
 	if (typeof document === 'undefined') return;
 
@@ -73,12 +75,19 @@ export async function setupGallery() {
 	applyContainerStyleBasedOnLayout(container, layout);
 
 	// Initialize GLightbox
-	GLightbox({
+	if (lightboxInstance) {
+		try { lightboxInstance.destroy(); } catch (e) {}
+	}
+	lightboxInstance = GLightbox({
 		selector: '.glightbox',
 		openEffect: 'zoom',
 		closeEffect: 'fade',
 		width: 'auto',
 		height: 'auto',
+		loop: true,
+		touchNavigation: true,
+		keyboardNavigation: true,
+		descPosition: 'bottom',
 	});
 }
 
