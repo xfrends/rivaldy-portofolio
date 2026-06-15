@@ -2,28 +2,5 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "rivaldy-portfolio",
 	"compatibility_date": "2026-01-14",
-	"pages_build_output_dir": "./dist",
-	"kv_namespaces": [
-		{
-			"binding": "SESSION"
-			// Add "id": "<CLOUDFLARE_KV_SESSION_NAMESPACE_ID>" for production deploys if using Wrangler.
-		},
-		{
-			"binding": "ANALYTICS"
-			// Add "id": "<CLOUDFLARE_KV_ANALYTICS_NAMESPACE_ID>" for production deploys if using Wrangler.
-		}
-	],
-	"r2_buckets": [
-		{
-			"binding": "GALLERY_BUCKET",
-			"bucket_name": "rivaldy-gallery"
-		}
-	],
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "rivaldy-portfolio-cms",
-			"database_id": "replace-with-cloudflare-d1-database-id"
-		}
-	]
+	"pages_build_output_dir": "./dist"
 }

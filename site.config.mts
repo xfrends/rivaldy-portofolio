@@ -15,7 +15,7 @@ export default {
 	socialLinks: [
 		{
 			name: 'WhatsApp',
-			url: 'https://wa.me/6289519022751',
+			url: 'https://wa.me/6289519033751',
 			icon: MessageCircle,
 		} as SocialLink,
 		{

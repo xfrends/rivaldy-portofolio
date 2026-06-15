@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout.astro';
 import LandingHero from '../components/LandingHero-2.astro';
 import FeaturedGallery from '../components/FeaturedGallery.astro';
 import FeaturedWorkScroll from '../components/FeaturedWorkScroll.astro';
+import Pricelist from '../components/Pricelist.astro';
 import { getRuntimeEnv } from '../lib/cloudflare';
 import { getSiteContent } from '../lib/siteCms';
 
@@ -20,4 +21,6 @@ const content = await getSiteContent(getRuntimeEnv(Astro.locals));
 	<section class="featured-section py-20">
 		<FeaturedGallery />
 	</section>
+
+	<Pricelist />
 </MainLayout>

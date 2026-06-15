@@ -56,7 +56,7 @@ Key referensi resource Cloudflare di `.env.example`:
 | `CLOUDFLARE_KV_SESSION_NAMESPACE_ID` | ID KV namespace untuk session Astro |
 | `CLOUDFLARE_KV_ANALYTICS_NAMESPACE_ID` | ID KV namespace untuk dashboard analytics |
 
-Catatan: binding runtime Cloudflare tidak dibaca dari `.env`. Binding harus dibuat di **Cloudflare Pages Settings > Functions** atau `wrangler.jsonc`.
+Catatan: binding runtime Cloudflare tidak dibaca dari `.env`. Untuk deploy via Cloudflare Pages dari Git, buat binding di **Cloudflare Pages Settings > Functions**. Jangan commit placeholder ID binding ke `wrangler.jsonc`, karena Cloudflare akan memvalidasi file itu saat deploy.
 
 #### Cloudflare Bindings
 1. Buka kembali pengaturan proyek Pages Anda di Cloudflare.
