@@ -32,7 +32,9 @@ export async function trackView(input: TrackViewInput): Promise<void> {
 	const kv = input.env?.ANALYTICS;
 	if (!kv) return;
 
-	const increments = [totalKey];
+	const today = new Date().toISOString().split('T')[0];
+	const increments = [totalKey, `${totalKey}:${today}`];
+	
 	if (input.path) increments.push(`${pagePrefix}${normalizeMetricId(input.path)}`);
 	if (input.collectionId) increments.push(`${collectionPrefix}${normalizeMetricId(input.collectionId)}`);
 	if (input.postId) increments.push(`${postPrefix}${normalizeMetricId(input.postId)}`);
@@ -82,6 +84,35 @@ export async function getAnalyticsSnapshot(
 			...emptyAnalyticsSnapshot(collections, posts, false),
 			error: getErrorMessage(error),
 		};
+	}
+}
+
+export async function getAnalyticsDateRange(
+	env: RuntimeEnv | undefined,
+	startDate: string,
+	endDate: string,
+): Promise<number> {
+	if (!env?.ANALYTICS) return 0;
+
+	try {
+		const start = new Date(startDate);
+		const end = new Date(endDate);
+		const dates: string[] = [];
+
+		for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+			dates.push(d.toISOString().split('T')[0]);
+		}
+
+		// Maximum 100 days to prevent KV limits if user inputs crazy dates
+		if (dates.length > 100) {
+			throw new Error('Date range too large (max 100 days)');
+		}
+
+		const counts = await Promise.all(dates.map((date) => getCounter(env, `${totalKey}:${date}`)));
+		return counts.reduce((sum, count) => sum + count, 0);
+	} catch (error) {
+		console.warn(`[WARN] Failed to get analytics date range: ${getErrorMessage(error)}`);
+		return 0;
 	}
 }
 
