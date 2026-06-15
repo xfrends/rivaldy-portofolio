@@ -1,0 +1,32 @@
+---
+import { withBase } from '../../lib/urls';
+
+interface Props {
+	active: 'dashboard' | 'content' | 'collections' | 'posts';
+}
+
+const { active } = Astro.props;
+const items = [
+	{ id: 'dashboard', label: 'Dashboard', href: withBase('admin') },
+	{ id: 'content', label: 'Content', href: withBase('admin/content') },
+	{ id: 'collections', label: 'Collections', href: withBase('admin/collections') },
+	{ id: 'posts', label: 'Posts', href: withBase('admin/posts') },
+];
+---
+
+<aside class="rounded-md border border-zinc-200 bg-white p-2 shadow-sm lg:sticky lg:top-24 lg:self-start">
+	<nav class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-1">
+		{
+			items.map((item) => (
+				<a
+					href={item.href}
+					class={`rounded-md px-3 py-3 text-center text-sm font-medium transition lg:text-left ${
+						active === item.id ? 'bg-zinc-950 text-white' : 'text-zinc-700 hover:bg-zinc-100'
+					}`}
+				>
+					{item.label}
+				</a>
+			))
+		}
+	</nav>
+</aside>

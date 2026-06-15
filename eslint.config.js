@@ -8,7 +8,7 @@ import globals from 'globals';
 export default [
 	js.configs.recommended,
 	{
-		ignores: ['dist/**', '.astro/**', 'node_modules/**', '.cache/**'],
+		ignores: ['dist/**', '.astro/**', '.wrangler/**', 'node_modules/**', '.cache/**'],
 	},
 	{
 		files: ['**/*.ts'],

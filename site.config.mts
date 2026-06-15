@@ -1,5 +1,5 @@
 import type { AstroInstance } from 'astro';
-import { Github, Instagram } from 'lucide-astro';
+import { Instagram, MessageCircle } from 'lucide-astro';
 
 export interface SocialLink {
 	name: string;
@@ -14,13 +14,13 @@ export default {
 	profileImage: 'profile.webp',
 	socialLinks: [
 		{
-			name: 'GitHub',
-			url: 'https://github.com/rockem/astro-photography-portfolio',
-			icon: Github,
+			name: 'WhatsApp',
+			url: 'https://wa.me/6289519022751',
+			icon: MessageCircle,
 		} as SocialLink,
 		{
 			name: 'Instagram',
-			url: 'https://www.instagram.com',
+			url: 'https://www.instagram.com/rivaldy.abida',
 			icon: Instagram,
 		} as SocialLink,
 	],

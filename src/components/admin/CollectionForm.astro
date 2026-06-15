@@ -1,0 +1,60 @@
+---
+import type { AdminCollection } from '../../lib/galleryCms';
+import { withBase } from '../../lib/urls';
+
+interface Props {
+	mode: 'create' | 'update';
+	collection?: AdminCollection;
+}
+
+const { mode, collection } = Astro.props;
+---
+
+<form action={withBase('api/admin/collections')} method="post" class="space-y-5">
+	<input type="hidden" name="action" value={mode} />
+	{collection && <input type="hidden" name="originalId" value={collection.id} />}
+	<div class="grid gap-4 md:grid-cols-2">
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">Slug</span>
+			<input
+				name="id"
+				type="text"
+				value={collection?.id || ''}
+				placeholder="prewedding"
+				required
+				class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+			/>
+		</label>
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">Name</span>
+			<input
+				name="name"
+				type="text"
+				value={collection?.name || ''}
+				required
+				placeholder="Prewedding"
+				class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+			/>
+		</label>
+	</div>
+	<div class="flex flex-wrap justify-end gap-3">
+		<a href={withBase('admin/collections')} class="rounded-md border border-zinc-300 px-5 py-3 text-sm font-medium text-zinc-800">
+			Cancel
+		</a>
+		<button type="submit" class="rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white">
+			{mode === 'create' ? 'Create Collection' : 'Save Collection'}
+		</button>
+		{
+			mode === 'update' && (
+				<button
+					type="submit"
+					name="action"
+					value="delete"
+					class="rounded-md border border-red-200 px-5 py-3 text-sm font-medium text-red-700"
+				>
+					Delete Collection
+				</button>
+			)
+		}
+	</div>
+</form>

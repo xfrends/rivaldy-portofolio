@@ -1,0 +1,36 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import AdminAlerts from '../../../components/admin/AdminAlerts.astro';
+import AdminHeader from '../../../components/admin/AdminHeader.astro';
+import AdminNav from '../../../components/admin/AdminNav.astro';
+import PostForm from '../../../components/admin/PostForm.astro';
+import { isAdminAuthenticated } from '../../../lib/adminAuth';
+import { getRuntimeEnv } from '../../../lib/cloudflare';
+import { getAdminGalleryState } from '../../../lib/galleryCms';
+import { withBase } from '../../../lib/urls';
+
+export const prerender = false;
+const runtimeEnv = getRuntimeEnv(Astro.locals);
+if (!(await isAdminAuthenticated(Astro.cookies, runtimeEnv))) return Astro.redirect(withBase('admin?error=session'));
+const state = await getAdminGalleryState(runtimeEnv);
+---
+
+<MainLayout>
+	<section class="min-h-screen bg-zinc-50 px-4 py-20 md:px-6">
+		<div class="mx-auto max-w-7xl">
+			<AdminHeader />
+			<AdminAlerts error={Astro.url.searchParams.get('error')} success={null} />
+			<div class="grid gap-6 lg:grid-cols-[220px_1fr]">
+				<AdminNav active="posts" />
+				<main class="rounded-md border border-zinc-200 bg-white p-5 shadow-sm">
+					<h2 class="mb-5 text-2xl font-semibold">Create Post</h2>
+					<PostForm mode="create" collections={state.collections} />
+				</main>
+			</div>
+		</div>
+	</section>
+</MainLayout>
+
+<script>
+	import '../../../scripts/admin-image-optimizer';
+</script>

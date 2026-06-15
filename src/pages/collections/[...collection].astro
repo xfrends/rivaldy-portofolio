@@ -2,23 +2,19 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import PhotoGrid from '../../components/PhotoGrid.astro';
 import { getCollections, getImages } from '../../data/imageStore';
+import { getRuntimeEnv } from '../../lib/cloudflare';
+import { withBase } from '../../lib/urls';
 
 const allCollection = {
 	id: undefined,
 	name: 'All',
 };
-const collections = [allCollection, ...(await getCollections())];
+const runtimeEnv = getRuntimeEnv(Astro.locals);
+const collections = [allCollection, ...(await getCollections(undefined, runtimeEnv))];
 const { collection } = Astro.params;
-const images = await getImages(collection ? { collection } : {});
-const base = import.meta.env.BASE_URL;
+const images = await getImages(collection ? { collection, runtimeEnv } : { runtimeEnv });
 
-export const getStaticPaths = async () => {
-	return [{ id: undefined }, ...(await getCollections())].map((collection) => {
-		return {
-			params: { collection: collection.id },
-		};
-	});
-};
+export const prerender = false;
 ---
 
 <MainLayout>
@@ -33,7 +29,7 @@ export const getStaticPaths = async () => {
 				<div class="flex flex-wrap gap-2 justify-center">
 					{
 						collections.map((collectionBtn) => (
-							<a href={`${base}/collections/${collectionBtn.id ? collectionBtn.id : ''}`}>
+							<a href={withBase(`collections/${collectionBtn.id ? collectionBtn.id : ''}`)}>
 								<div
 									class={`px-4 py-2 border ${
 										collectionBtn.id === collection

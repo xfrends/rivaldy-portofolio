@@ -6,6 +6,8 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
+		"preview:pages": "wrangler pages dev dist --r2=GALLERY_BUCKET --kv=SESSION --kv=ANALYTICS --d1=DB",
+		"deploy:pages": "wrangler pages deploy dist",
 		"astro": "astro",
 		"prettier": "prettier . --write",
 		"test": "vitest",
@@ -13,6 +15,7 @@
 		"generate": "npx tsx src/data/gallery-generator.ts src/gallery"
 	},
 	"devDependencies": {
+		"@astrojs/cloudflare": "^12.6.13",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.0.14",
 		"@types/js-yaml": "^4.0.9",

@@ -1,19 +1,21 @@
 ---
-import siteConfig from '../../site.config.mjs';
+import type { SiteContent } from '../lib/siteCms';
+import { withBase } from '../lib/urls';
 
-const owner = siteConfig.owner;
-const base = import.meta.env.BASE_URL;
-const heroSubtitles = [
-	'Your Graduation Story',
-	'Merayakan Gelar, Mengabadikan Moment',
-	'Frame Your Achievement',
-];
+interface Props {
+	content: SiteContent;
+}
+
+const { content } = Astro.props;
+const heroSubtitles = content.heroTagline.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+const title = content.heroTitle;
+const subtitleLabel = heroSubtitles.join(', ');
 ---
 
 <div
 	class="absolute top-[80px] bottom-[120px] left-0 right-0 z-0"
 	style={{
-		backgroundImage: 'url(/src/gallery/nature/nature-8.jpg)',
+		backgroundImage: `url(${withBase(content.heroImage)})`,
 		backgroundSize: 'cover',
 		backgroundPosition: 'center',
 		backgroundRepeat: 'no-repeat',
@@ -23,16 +25,16 @@ const heroSubtitles = [
 </div>
 <div class="container text-left mb-32 relative z-10">
 	<h1 class="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-		<span class="font-brand">{owner}</span>
+		<span class="font-brand">{title}</span>
 	</h1>
 	<p
 		class="hero-subtitle-rotator mt-4 text-base md:text-lg text-gray-700"
-		aria-label="Your Graduation Story, Merayakan Gelar, Mengabadikan Moment, Frame Your Achievement"
+		aria-label={subtitleLabel}
 	>
 		{heroSubtitles.map((subtitle) => <span>{subtitle}</span>)}
 	</p>
 	<a
-		href=`${base}/collections`
+		href={withBase('collections')}
 		class="mt-8 inline-block px-6 py-3 border-2 border-black rounded-md
                       hover:bg-black hover:text-white transition-all duration-300
                       text-sm md:text-base font-medium
@@ -60,6 +62,10 @@ const heroSubtitles = [
 
 	.hero-subtitle-rotator span:nth-child(3) {
 		animation-delay: 6s;
+	}
+
+	.hero-subtitle-rotator span:nth-child(n + 4) {
+		display: none;
 	}
 
 	@keyframes heroSubtitleFade {

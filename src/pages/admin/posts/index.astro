@@ -1,0 +1,59 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import AdminAlerts from '../../../components/admin/AdminAlerts.astro';
+import AdminHeader from '../../../components/admin/AdminHeader.astro';
+import AdminNav from '../../../components/admin/AdminNav.astro';
+import { isAdminAuthenticated } from '../../../lib/adminAuth';
+import { getRuntimeEnv } from '../../../lib/cloudflare';
+import { getAdminGalleryState } from '../../../lib/galleryCms';
+import { withBase } from '../../../lib/urls';
+
+export const prerender = false;
+const runtimeEnv = getRuntimeEnv(Astro.locals);
+if (!(await isAdminAuthenticated(Astro.cookies, runtimeEnv))) return Astro.redirect(withBase('admin?error=session'));
+const state = await getAdminGalleryState(runtimeEnv);
+const error = Astro.url.searchParams.get('error');
+const success = Astro.url.searchParams.get('success');
+---
+
+<MainLayout>
+	<section class="min-h-screen bg-zinc-50 px-4 py-20 md:px-6">
+		<div class="mx-auto max-w-7xl">
+			<AdminHeader />
+			<AdminAlerts error={error} success={success} />
+			<div class="grid gap-6 lg:grid-cols-[220px_1fr]">
+				<AdminNav active="posts" />
+				<main class="rounded-md border border-zinc-200 bg-white shadow-sm">
+					<div class="flex flex-col gap-3 border-b border-zinc-200 px-5 py-4 md:flex-row md:items-center md:justify-between">
+						<div>
+							<h2 class="text-2xl font-semibold">Posts</h2>
+							<p class="text-sm text-zinc-500">{state.posts.length} CMS posts</p>
+						</div>
+						<a href={withBase('admin/posts/create')} class="rounded-md bg-zinc-950 px-4 py-2 text-sm font-semibold text-white">
+							Create Post
+						</a>
+					</div>
+					<div class="divide-y divide-zinc-200">
+						{state.posts.length === 0 ? (
+							<p class="px-5 py-8 text-sm text-zinc-500">Belum ada post dari CMS.</p>
+						) : (
+							state.posts.map((post) => (
+								<div class="grid gap-4 p-4 md:grid-cols-[96px_1fr_120px] md:items-center">
+									<img src={withBase(post.thumbnail)} alt={post.title} class="h-24 w-24 rounded-md object-cover" loading="lazy" />
+									<div class="min-w-0">
+										<p class="truncate font-semibold text-zinc-900">{post.title}</p>
+										<p class="text-sm text-zinc-500">{post.allImages.length} images</p>
+										<p class="truncate text-sm text-zinc-500">{post.collections.join(', ') || 'No collection'}</p>
+									</div>
+									<a href={withBase(`admin/posts/${post.id}/edit`)} class="rounded-md border border-zinc-300 px-4 py-2 text-center text-sm font-medium text-zinc-800">
+										Edit
+									</a>
+								</div>
+							))
+						)}
+					</div>
+				</main>
+			</div>
+		</div>
+	</section>
+</MainLayout>

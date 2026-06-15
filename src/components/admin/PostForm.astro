@@ -1,0 +1,147 @@
+---
+import type { AdminCollection, AdminPost } from '../../lib/galleryCms';
+import { withBase } from '../../lib/urls';
+
+interface Props {
+	mode: 'create' | 'update';
+	collections: AdminCollection[];
+	post?: AdminPost;
+}
+
+const { mode, collections, post } = Astro.props;
+const isUpdate = mode === 'update' && post;
+---
+
+<form
+	action={withBase('api/admin/posts')}
+	method="post"
+	enctype="multipart/form-data"
+	data-optimize-images
+	class="space-y-5"
+>
+	<input type="hidden" name="action" value={mode} />
+	{isUpdate && <input type="hidden" name="id" value={post.id} />}
+
+	<div class="grid gap-4 md:grid-cols-2">
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">Title</span>
+			<input
+				name="title"
+				type="text"
+				value={post?.title || ''}
+				required
+				class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+			/>
+		</label>
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">Collections</span>
+			<select
+				name="collections"
+				multiple
+				required
+				class="mt-2 min-h-28 w-full rounded-md border border-zinc-300 bg-white px-4 py-3 text-base outline-none focus:border-zinc-900"
+			>
+				{
+					collections.map((collection) => (
+						<option value={collection.id} selected={post?.collections.includes(collection.id)}>
+							{collection.name}
+						</option>
+					))
+				}
+			</select>
+		</label>
+	</div>
+
+	<label class="block">
+		<span class="text-sm font-medium text-zinc-800">Description</span>
+		<textarea
+			name="description"
+			rows="4"
+			class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+		>{post?.description || ''}</textarea>
+	</label>
+
+	{
+		isUpdate && (
+			<div>
+				<p class="mb-2 text-sm font-medium text-zinc-800">Current Images</p>
+				<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
+					{post.allImages.map((imagePath) => (
+						<div class="rounded-md border border-zinc-200 p-2">
+							<img
+								src={withBase(imagePath)}
+								alt={post.title}
+								class="aspect-square w-full rounded object-cover"
+								loading="lazy"
+							/>
+							<label class="mt-2 flex items-center gap-2 text-xs text-zinc-700">
+								<input
+									type="radio"
+									name="selectedThumbnail"
+									value={imagePath}
+									checked={imagePath === post.thumbnail}
+									class="accent-zinc-950"
+								/>
+								Thumbnail
+							</label>
+							<label class="mt-2 flex items-center gap-2 text-xs text-red-700">
+								<input type="checkbox" name="removeImages" value={imagePath} class="accent-red-700" />
+								Delete image
+							</label>
+						</div>
+					))}
+				</div>
+			</div>
+		)
+	}
+
+	<div class="grid gap-4 md:grid-cols-2">
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">
+				{isUpdate ? 'Replace thumbnail' : 'Thumbnail'}
+			</span>
+			<input
+				name="thumbnail"
+				type="file"
+				accept="image/jpeg,image/png,image/webp"
+				required={!isUpdate}
+				class="mt-2 w-full rounded-md border border-dashed border-zinc-300 px-4 py-5 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-zinc-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+			/>
+		</label>
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">{isUpdate ? 'Add images' : 'Images'}</span>
+			<input
+				name="images"
+				type="file"
+				accept="image/jpeg,image/png,image/webp"
+				multiple
+				class="mt-2 w-full rounded-md border border-dashed border-zinc-300 px-4 py-5 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-zinc-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+			/>
+		</label>
+	</div>
+
+	<div class="flex flex-wrap items-center gap-3">
+		<label class="flex items-center gap-3 rounded-md border border-zinc-200 px-4 py-3">
+			<input name="featured" type="checkbox" checked={post?.isFeatured} class="h-5 w-5 accent-zinc-950" />
+			<span class="text-sm font-medium text-zinc-800">Featured</span>
+		</label>
+		<button
+			type="submit"
+			class="ml-auto rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white"
+		>
+			{isUpdate ? 'Save Post' : 'Create Post'}
+		</button>
+		{
+			isUpdate && (
+				<button
+					type="submit"
+					name="action"
+					value="delete"
+					class="rounded-md border border-red-200 px-5 py-3 text-sm font-medium text-red-700"
+				>
+					Delete Post
+				</button>
+			)
+		}
+	</div>
+</form>

@@ -1,0 +1,18 @@
+---
+import { withBase } from '../../lib/urls';
+---
+
+<div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+	<div>
+		<p class="text-sm uppercase tracking-[0.2em] text-zinc-500">Admin CMS</p>
+		<h1 class="mt-2 text-4xl font-bold">Gallery Management</h1>
+	</div>
+	<form action={withBase('api/admin/logout')} method="post">
+		<button
+			type="submit"
+			class="rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-medium text-zinc-800 shadow-sm"
+		>
+			Logout
+		</button>
+	</form>
+</div>

@@ -1,0 +1,101 @@
+---
+import type { SiteContent } from '../../lib/siteCms';
+import { withBase } from '../../lib/urls';
+
+interface Props {
+	content: SiteContent;
+}
+
+const { content } = Astro.props;
+---
+
+<form
+	action={withBase('api/admin/content')}
+	method="post"
+	enctype="multipart/form-data"
+	data-optimize-images
+	class="space-y-8"
+>
+	<section class="space-y-5">
+		<div>
+			<h2 class="text-2xl font-semibold">Hero</h2>
+			<p class="text-sm text-zinc-500">Konten utama di halaman depan.</p>
+		</div>
+
+		<div class="grid gap-4 md:grid-cols-2">
+			<label class="block">
+				<span class="text-sm font-medium text-zinc-800">Title</span>
+				<input
+					name="heroTitle"
+					type="text"
+					value={content.heroTitle}
+					required
+					class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+				/>
+			</label>
+			<label class="block">
+				<span class="text-sm font-medium text-zinc-800">Hero Image</span>
+				<input
+					name="heroImage"
+					type="file"
+					accept="image/jpeg,image/png,image/webp"
+					class="mt-2 w-full rounded-md border border-dashed border-zinc-300 px-4 py-5 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-zinc-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+				/>
+			</label>
+		</div>
+
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">Tagline</span>
+			<textarea
+				name="heroTagline"
+				rows="4"
+				required
+				class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+			>{content.heroTagline}</textarea>
+		</label>
+
+		<div class="max-w-md rounded-md border border-zinc-200 p-3">
+			<img src={withBase(content.heroImage)} alt="Current hero" class="aspect-video w-full rounded object-cover" />
+			<p class="mt-2 text-xs text-zinc-500">Current hero image</p>
+		</div>
+	</section>
+
+	<section class="space-y-5 border-t border-zinc-200 pt-8">
+		<div>
+			<h2 class="text-2xl font-semibold">About</h2>
+			<p class="text-sm text-zinc-500">Foto dan teks halaman About.</p>
+		</div>
+
+		<div class="grid gap-4 md:grid-cols-2">
+			<label class="block">
+				<span class="text-sm font-medium text-zinc-800">About Image</span>
+				<input
+					name="aboutImage"
+					type="file"
+					accept="image/jpeg,image/png,image/webp"
+					class="mt-2 w-full rounded-md border border-dashed border-zinc-300 px-4 py-5 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-zinc-950 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+				/>
+			</label>
+			<div class="rounded-md border border-zinc-200 p-3">
+				<img src={withBase(content.aboutImage)} alt="Current about" class="aspect-square w-full rounded object-cover" />
+				<p class="mt-2 text-xs text-zinc-500">Current about image</p>
+			</div>
+		</div>
+
+		<label class="block">
+			<span class="text-sm font-medium text-zinc-800">About Text</span>
+			<textarea
+				name="aboutText"
+				rows="12"
+				required
+				class="mt-2 w-full rounded-md border border-zinc-300 px-4 py-3 text-base outline-none focus:border-zinc-900"
+			>{content.aboutText}</textarea>
+		</label>
+	</section>
+
+	<div class="flex justify-end border-t border-zinc-200 pt-5">
+		<button type="submit" class="rounded-md bg-zinc-950 px-5 py-3 text-sm font-semibold text-white">
+			Save Content
+		</button>
+	</div>
+</form>

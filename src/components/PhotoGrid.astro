@@ -9,9 +9,18 @@ interface Props {
 }
 
 const { images } = Astro.props;
+
+const isPublicImage = (src: ImageType['src']) => typeof src.src === 'string' && src.src.startsWith('/');
 ---
 
 <section id="photo-grid" class="relative w-full mx-auto overflow-hidden">
+	{
+		images.length === 0 && (
+			<div class="flex min-h-64 items-center justify-center rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-12 text-center text-sm text-zinc-500">
+				No gallery posts yet.
+			</div>
+		)
+	}
 	{
 		images.map((image, index) => (
 			<>
@@ -20,17 +29,32 @@ const { images } = Astro.props;
 					class="photo-item glightbox absolute transition-transform hover:scale-[1.02] hover:z-10 group"
 					data-gallery={`gallery-${index}`}
 					data-type="image"
+					data-post-id={image.id}
 					data-glightbox={image.description ? `title: ${image.description}` : undefined}
 				>
-					<Image
-						src={image.src}
-						quality={90}
-						format="webp"
-						width={image.src.width}
-						height={image.src.height}
-						class="w-full h-full object-cover rounded-sm shadow-sm hover:shadow-lg transition-shadow"
-						alt={image.title}
-					/>
+					{
+						isPublicImage(image.src) ? (
+							<img
+								src={image.src.src}
+								width={image.src.width}
+								height={image.src.height}
+								class="w-full h-full object-cover rounded-sm shadow-sm hover:shadow-lg transition-shadow"
+								alt={image.title}
+								loading="lazy"
+								decoding="async"
+							/>
+						) : (
+							<Image
+								src={image.src}
+								quality={90}
+								format="webp"
+								width={image.src.width}
+								height={image.src.height}
+								class="w-full h-full object-cover rounded-sm shadow-sm hover:shadow-lg transition-shadow"
+								alt={image.title}
+							/>
+						)
+					}
 					{image.additionalSrcs && image.additionalSrcs.length > 0 && (
 						<div class="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white p-1.5 rounded-md pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity">
 							<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

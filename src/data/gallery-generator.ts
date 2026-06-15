@@ -3,7 +3,8 @@ import * as fs from 'node:fs';
 import yaml from 'js-yaml';
 import path from 'path';
 import fg from 'fast-glob';
-import { type GalleryData, loadGallery, NullGalleryData } from './galleryData.ts';
+import { type GalleryData, NullGalleryData } from './galleryData.ts';
+import { loadGallery } from './galleryFileLoader.ts';
 import { createGalleryCollection, createGalleryImage } from './galleryEntityFactory.ts';
 
 const defaultGalleryFileName = 'gallery.yaml';

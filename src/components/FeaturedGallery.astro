@@ -1,8 +1,12 @@
 ---
 import PhotoGrid from './PhotoGrid.astro';
 import { featuredCollectionId, getImages } from '../data/imageStore';
+import { getRuntimeEnv } from '../lib/cloudflare';
 
-const images = await getImages({ collection: featuredCollectionId });
+const images = await getImages({
+	collection: featuredCollectionId,
+	runtimeEnv: getRuntimeEnv(Astro.locals),
+});
 ---
 
 <div class="max-w-2xl mx-auto text-center mb-16">

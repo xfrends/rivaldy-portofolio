@@ -5,10 +5,10 @@ import * as fs from 'node:fs';
 import {
 	type GalleryData,
 	type GalleryImage,
-	loadGallery,
 	type Meta,
 	type ImageExif,
 } from '../galleryData.ts';
+import { loadGallery } from '../galleryFileLoader.ts';
 import { expectContainsOnlyObjectsWith } from './expect_util.ts';
 import yaml from 'js-yaml';
 

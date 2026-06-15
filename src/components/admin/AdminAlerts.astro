@@ -1,0 +1,29 @@
+---
+interface Props {
+	error?: string | null;
+	success?: string | null;
+}
+
+const { error, success } = Astro.props;
+const successText: Record<string, string> = {
+	'collection-created': 'Collection berhasil dibuat.',
+	'collection-updated': 'Collection berhasil diupdate.',
+	'collection-deleted': 'Collection berhasil dihapus.',
+	'post-created': 'Post berhasil dibuat.',
+	'post-updated': 'Post berhasil diupdate.',
+	'post-deleted': 'Post berhasil dihapus.',
+	'content-updated': 'Content website berhasil diupdate.',
+};
+---
+
+{error && (
+	<div class="mb-5 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+		{error}
+	</div>
+)}
+
+{success && successText[success] && (
+	<div class="mb-5 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+		{successText[success]}
+	</div>
+)}

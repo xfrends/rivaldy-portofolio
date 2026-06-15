@@ -1,8 +1,8 @@
 ---
 import siteConfig from '../../site.config.mjs';
+import { withBase } from '../lib/urls';
 
 const owner = siteConfig.owner;
-const base = import.meta.env.BASE_URL;
 const heroSubtitles = [
 	'Your Graduation Story',
 	'Merayakan Gelar, Mengabadikan Moment',
@@ -22,7 +22,7 @@ const heroSubtitles = [
 			{heroSubtitles.map((subtitle) => <span>{subtitle}</span>)}
 		</p>
 		<a
-			href=`${base}/collections`
+			href={withBase('collections')}
 			class="mt-8 inline-block px-6 py-3 border-2 border-black rounded-md
                       hover:bg-black hover:text-white transition-all duration-300
                       text-sm md:text-base font-medium

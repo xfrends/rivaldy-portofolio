@@ -1,126 +1,101 @@
-# 📸 Astro Photography Portfolio Template
+# Portofolio Fotografi
 
-[![Build & Test](https://github.com/rockem/astro-photography-portfolio/actions/workflows/test.yml/badge.svg)](https://github.com/rockem/astro-photography-portfolio/actions/workflows/test.yml)
+Sebuah website portofolio fotografi yang modern, cepat, dan responsif, dibangun menggunakan [Astro](https://astro.build).
 
-A modern, fast, and highly customizable photography portfolio template built with [Astro](https://astro.build).
-Ideal for photographers who want to showcase their work through a sleek, performant, and professional website.
+## 🚀 Cara Deploy ke Cloudflare Pages (Gratis)
 
-👉 [View the demo](https://rockem.github.io/astro-photography-portfolio/)
+Proyek ini dapat di-deploy secara gratis ke Cloudflare Pages. Ikuti langkah-langkah berikut:
 
-## ✨ Features
+### Persiapan
+1. Pastikan Anda memiliki akun [Cloudflare](https://dash.cloudflare.com/).
+2. Pastikan seluruh kode sumber (source code) proyek ini sudah di-push ke repository GitHub atau GitLab Anda.
 
-- Lightning-fast performance with Astro
-- Fully responsive design
-- Optimized image loading and handling
-- Easy to customize
-- Easy to organized gallery via a yaml file
-- Multiple albums support
-- Image zoom capabilities
-- Automatic deployment to GitHub pages
-- Script to automatically create a gallery from images
+### Langkah-Langkah Deployment
+1. Login ke dashboard Cloudflare.
+2. Buka menu **Workers & Pages** di sidebar sebelah kiri.
+3. Klik tombol **Create application**, kemudian pilih tab **Pages**.
+4. Klik **Connect to Git** dan hubungkan dengan akun GitHub/GitLab Anda.
+5. Pilih repository yang berisi proyek portofolio ini, lalu klik **Begin setup**.
+6. Pada bagian **Build settings**, sesuaikan konfigurasi berikut:
+   - **Framework preset**: `Astro`
+   - **Build command**: `npm run build`
+   - **Build output directory**: `dist`
+7. *(Opsional - Hanya jika Anda menggunakan fitur Admin CMS)* Klik **Environment variables (advanced)** dan tambahkan:
+   - `ADMIN_USERNAME`: username pilihan Anda
+   - `ADMIN_PASSWORD`: password rahasia Anda
+   - `ADMIN_SESSION_SECRET`: teks acak yang panjang (untuk keamanan sesi)
+   - `SITE_URL`: URL situs Anda (misal: `https://portofolio-anda.pages.dev`)
+8. Klik **Save and Deploy**. Cloudflare akan memproses build dan situs Anda akan segera online!
 
-## 🚀 Getting Started
+### Pengaturan Lanjutan (Jika Menggunakan Admin CMS)
+Jika Anda ingin bisa mengunggah foto melalui halaman `/admin` langsung dari HP/Web, atur penyimpanan (Storage) Cloudflare berikut:
 
-### Prerequisites
-
-- Check [AstroJS](https://docs.astro.build/en/install-and-setup/) documentation for prerequisites
-- Basic knowledge of Astro and web development
-
-### Installation
-
-1. click "Use this template" on GitHub
-2. Clone your newly created template
-3. Install dependencies:
-
-```bash
-npm install
-# or
-yarn install
-```
-
-3. Start the development server:
+#### Environment Variables
+Salin `.env.example` menjadi `.env` untuk development lokal:
 
 ```bash
-npm run dev
-# or
-yarn dev
+cp .env.example .env
 ```
 
-## 📝 Make it your own
+Isi yang wajib:
 
-### Configuration
+| Key | Dipakai untuk | Contoh |
+| --- | --- | --- |
+| `ADMIN_USERNAME` | Login admin statis | `admin` |
+| `ADMIN_PASSWORD` | Password admin statis | `password-kuat` |
+| `ADMIN_SESSION_SECRET` | Signing cookie session admin | `teks-random-panjang` |
+| `SITE_URL` | URL canonical/site config | `https://portofolio-anda.pages.dev` |
 
-Edit the `astro.config.ts` file to update your github pages details:
+Key referensi resource Cloudflare di `.env.example`:
 
-```typescript
-export default defineConfig({
-  site: '<github pages domain>',
-  base: '<repository name>',
-  // ...
-});
+| Key | Keterangan |
+| --- | --- |
+| `CLOUDFLARE_D1_DATABASE_NAME` | Nama D1 database untuk data CMS |
+| `CLOUDFLARE_D1_DATABASE_ID` | ID D1 database dari dashboard/`wrangler d1 list` |
+| `CLOUDFLARE_R2_BUCKET_NAME` | Nama R2 bucket untuk file gambar |
+| `CLOUDFLARE_KV_SESSION_NAMESPACE_ID` | ID KV namespace untuk session Astro |
+| `CLOUDFLARE_KV_ANALYTICS_NAMESPACE_ID` | ID KV namespace untuk dashboard analytics |
+
+Catatan: binding runtime Cloudflare tidak dibaca dari `.env`. Binding harus dibuat di **Cloudflare Pages Settings > Functions** atau `wrangler.jsonc`.
+
+#### Cloudflare Bindings
+1. Buka kembali pengaturan proyek Pages Anda di Cloudflare.
+2. Buka menu **Settings** > **Functions** > **R2 bucket bindings**.
+   - Buat sebuah R2 Bucket baru (gratis tier tersedia).
+   - Tambahkan *binding* baru dengan Variable name: `GALLERY_BUCKET` dan hubungkan ke bucket yang baru dibuat.
+3. Buka menu **Settings** > **Functions** > **D1 database bindings**.
+   - Buat sebuah D1 Database baru.
+   - Tambahkan *binding* baru dengan Variable name: `DB` dan hubungkan ke database yang baru dibuat.
+4. Buka menu **Settings** > **Functions** > **KV namespace bindings**.
+   - Buat dua KV Namespace baru.
+   - Tambahkan *binding* baru dengan Variable name: `SESSION` dan hubungkan ke namespace yang baru dibuat.
+   - Tambahkan *binding* baru dengan Variable name: `ANALYTICS` dan hubungkan ke namespace analytics yang baru dibuat.
+5. Lakukan **Redeploy** (deploy ulang) dari halaman utama proyek Pages Anda agar pengaturan ini aktif.
+
+#### Mapping Binding yang Wajib
+
+| Binding | Tipe Cloudflare | Fungsi |
+| --- | --- | --- |
+| `DB` | D1 Database | Menyimpan content CMS, collections, posts, relasi post-collection, dan metadata image |
+| `GALLERY_BUCKET` | R2 Bucket | Menyimpan file gambar WebP hasil upload CMS, termasuk hero/about image |
+| `SESSION` | KV Namespace | Session internal Astro/Cloudflare adapter |
+| `ANALYTICS` | KV Namespace | Total view, view per page, collection, dan post |
+
+Untuk preview lokal setelah build:
+
+```bash
+npm run build
+npm run preview:pages
 ```
 
-Edit the `site.config.mts` file to update your personal information:
+---
 
-```typescript
-export default {
-  title: 'SR',
-  favicon: 'favicon.ico',
-  owner: 'Sara Richard',
-  // ... Other configurations
-};
-```
+## 📝 Cara Mengelola Konten
 
-### Customize site icon
-
-Replace `public/favicon.ico` with your icon and change the configuration
-if your file has a different name/location.
-
-### Customize the About page
-
-- Replace the profile image (see [site.config.mts](site.config.mts) for configuration)
-- Edit content in [about page](./src/pages/about.astro)
-
-### Adding Your Photos
-
-1. Place your images in the `src/gallery/<album>` directory
-2. Update the gallery details in `src/gallery/gallery.yaml`. Optionally, you can run `npm run generate` to generate a
-   gallery.yaml file from the images in the directory.
-3. Update meta-data for images in the `src/gallery/gallery.yaml` file.
-4. Images are automatically optimized during build
-
-### Adding photos to the featured section
-
-"featured" is a builtin collection, and images can be added to it by specifying it in the collections parameter like any
-other collection.
-
-## 🛠️ Built With
-
-- [Astro](https://astro.build) - The web framework for content-driven websites
-- [TypeScript](https://www.typescriptlang.org/) - For type safety
-- [TailwindCSS](https://tailwindcss.com) - For styling
-- [Sharp](https://sharp.pixelplumbing.com/) - For image optimization
-- [GLightbox](https://biati-digital.github.io/glightbox/) - Responsive lightbox gallery
-
-## ⚙️ Provided GitHub actions
-
-- [Build & Test](./.github/workflows/test.yml) - Ensure build integrity
-- [Quality](./.github/workflows/quality.yml) - Run pre-commit checks
-- [Deploy Astro Site](./.github/workflows/deploy.yml) - Publish to GitHub pages
-
-## 📄 License
-
-This project is licensed under the MIT License, see the [LICENSE](LICENSE) file for details.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request or an Issue.
-
-## 💖 Support
-
-If you find this template useful, please consider giving it a ⭐️ on GitHub!
-
-## 📧 Contact
-
-- [Instagram](https://www.instagram.com/lesegal/)
-- [GitHub](https://github.com/rockem)
+- **Admin CMS**: buka `/admin`, lalu kelola data dari menu Dashboard, Content, Collections, dan Posts.
+- **Content**: hero title, hero tagline, hero image, about image, dan about text disimpan di Cloudflare D1 melalui binding `DB`.
+- **Collections**: data collection disimpan di Cloudflare D1 melalui binding `DB`.
+- **Posts**: data post, relasi collection, title, description, dan metadata image disimpan di D1.
+- **Images**: file gambar disimpan di R2 melalui binding `GALLERY_BUCKET`; upload dari admin dikonversi ke WebP di frontend sebelum dikirim.
+- **Profil & Website**: edit file `site.config.mts` untuk mengubah nama situs, ikon, nama fotografer, dsb.
+- **Halaman About**: ubah teks dan gambar halaman *About* di `src/pages/about.astro`.
