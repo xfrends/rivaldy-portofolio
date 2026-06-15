@@ -30,6 +30,15 @@ export default [
 			...ts.configs.recommended.rules,
 		},
 	},
+	{
+		files: ['scripts/**/*.mjs'],
+		languageOptions: {
+			globals: {
+				...globals.node,
+			},
+			sourceType: 'module',
+		},
+	},
 
 	{
 		files: ['**/*.astro'],

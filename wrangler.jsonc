@@ -2,5 +2,28 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "rivaldy-portfolio",
 	"compatibility_date": "2026-01-14",
-	"pages_build_output_dir": "./dist"
+	"pages_build_output_dir": "./dist",
+	"kv_namespaces": [
+		{
+			"binding": "SESSION",
+			"id": "e03053a54fd44a44b9e74a1a7648b6ed"
+		},
+		{
+			"binding": "ANALYTICS",
+			"id": "f7445719b3ac41639d5872e4001da4b3"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "GALLERY_BUCKET",
+			"bucket_name": "rivaldy-gallery"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "rivaldy-portfolio-cms",
+			"database_id": "548a9cec-166d-43f0-b9e8-a86d7fb51fea"
+		}
+	]
 }

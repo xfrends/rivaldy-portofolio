@@ -20,12 +20,18 @@ Proyek ini dapat di-deploy secara gratis ke Cloudflare Pages. Ikuti langkah-lang
    - **Framework preset**: `Astro`
    - **Build command**: `npm run build`
    - **Build output directory**: `dist`
-7. *(Opsional - Hanya jika Anda menggunakan fitur Admin CMS)* Klik **Variables and secrets** dan tambahkan sebagai **Secret**:
+7. Sebelum deploy pertama, jalankan setup resource Cloudflare dari komputer lokal:
+   ```bash
+   npm run cf:setup
+   ```
+   Script ini akan membuat D1, KV, dan R2 dengan prefix `rivaldy`, lalu mengisi `wrangler.jsonc`.
+8. Commit dan push `wrangler.jsonc` hasil generate.
+9. *(Opsional - Hanya jika Anda menggunakan fallback login dari secret)* Klik **Variables and secrets** dan tambahkan sebagai **Secret**:
    - `ADMIN_PASSWORD`: password rahasia admin
    - `ADMIN_USERNAME`: opsional, default `admin`
    - `ADMIN_SESSION_SECRET`: opsional, default memakai `ADMIN_PASSWORD`
    - `SITE_URL`: URL situs Anda (misal: `https://portofolio-anda.pages.dev`)
-8. Klik **Save and Deploy**. Cloudflare akan memproses build dan situs Anda akan segera online!
+10. Klik **Save and Deploy**. Cloudflare akan memproses build dan situs Anda akan segera online!
 
 ### Pengaturan Lanjutan (Jika Menggunakan Admin CMS)
 Jika Anda ingin bisa mengunggah foto melalui halaman `/admin` langsung dari HP/Web, atur penyimpanan (Storage) Cloudflare berikut:
@@ -48,31 +54,28 @@ Isi yang dipakai:
 | `ADMIN_SESSION_SECRET` | Signing cookie session admin, opsional default `ADMIN_PASSWORD` | `teks-random-panjang` |
 | `SITE_URL` | URL canonical/site config | `https://portofolio-anda.pages.dev` |
 
-Key referensi resource Cloudflare di `.env.example`:
+#### Generate Cloudflare Resources
+Jalankan:
 
-| Key | Keterangan |
-| --- | --- |
-| `CLOUDFLARE_D1_DATABASE_NAME` | Nama D1 database untuk data CMS |
-| `CLOUDFLARE_D1_DATABASE_ID` | ID D1 database dari dashboard/`wrangler d1 list` |
-| `CLOUDFLARE_R2_BUCKET_NAME` | Nama R2 bucket untuk file gambar |
-| `CLOUDFLARE_KV_SESSION_NAMESPACE_ID` | ID KV namespace untuk session Astro |
-| `CLOUDFLARE_KV_ANALYTICS_NAMESPACE_ID` | ID KV namespace untuk dashboard analytics |
+```bash
+npm run cf:setup
+```
 
-Catatan: binding storage Cloudflare seperti D1, R2, dan KV tidak dibaca dari `.env`. Untuk deploy via Cloudflare Pages dari Git, buat binding di **Cloudflare Pages Settings > Functions**. Jangan commit placeholder ID binding ke `wrangler.jsonc`, karena Cloudflare akan memvalidasi file itu saat deploy.
+Script ini idempotent: jika resource dengan nama berikut sudah ada, resource lama akan dipakai; jika belum ada, akan dibuat:
+
+| Binding | Resource Cloudflare | Nama yang dibuat |
+| --- | --- | --- |
+| `DB` | D1 Database | `rivaldy-portfolio-cms` |
+| `GALLERY_BUCKET` | R2 Bucket | `rivaldy-gallery` |
+| `SESSION` | KV Namespace | `rivaldy-session` |
+| `ANALYTICS` | KV Namespace | `rivaldy-analytics` |
+
+Setelah selesai, script akan update `wrangler.jsonc` dengan ID resource yang valid. File `wrangler.jsonc` hasil generate harus di-commit karena Cloudflare Pages membaca binding dari file ini sebelum build berjalan.
+
+Catatan: D1, R2, dan KV tidak bisa dibuat oleh kode runtime website karena resource harus sudah ada sebelum Worker/Pages aktif. Automasi dilakukan oleh script setup memakai Wrangler CLI.
 
 #### Cloudflare Bindings
-1. Buka kembali pengaturan proyek Pages Anda di Cloudflare.
-2. Buka menu **Settings** > **Functions** > **R2 bucket bindings**.
-   - Buat sebuah R2 Bucket baru (gratis tier tersedia).
-   - Tambahkan *binding* baru dengan Variable name: `GALLERY_BUCKET` dan hubungkan ke bucket yang baru dibuat.
-3. Buka menu **Settings** > **Functions** > **D1 database bindings**.
-   - Buat sebuah D1 Database baru.
-   - Tambahkan *binding* baru dengan Variable name: `DB` dan hubungkan ke database yang baru dibuat.
-4. Buka menu **Settings** > **Functions** > **KV namespace bindings**.
-   - Buat dua KV Namespace baru.
-   - Tambahkan *binding* baru dengan Variable name: `SESSION` dan hubungkan ke namespace yang baru dibuat.
-   - Tambahkan *binding* baru dengan Variable name: `ANALYTICS` dan hubungkan ke namespace analytics yang baru dibuat.
-5. Lakukan **Redeploy** (deploy ulang) dari halaman utama proyek Pages Anda agar pengaturan ini aktif.
+Jika memakai deploy dari GitHub/GitLab, binding D1/R2/KV akan dibaca dari `wrangler.jsonc` hasil `npm run cf:setup`. Anda tidak perlu menambahkan ID resource ke `.env`.
 
 #### Mapping Binding yang Wajib
 
