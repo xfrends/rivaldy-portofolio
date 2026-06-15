@@ -14,7 +14,8 @@ const $$AdminAlerts = createComponent(($$result, $$props, $$slots) => {
     "post-created": "Post berhasil dibuat.",
     "post-updated": "Post berhasil diupdate.",
     "post-deleted": "Post berhasil dihapus.",
-    "content-updated": "Content website berhasil diupdate."
+    "content-updated": "Content website berhasil diupdate.",
+    "pricelist-updated": "Pricelist berhasil diupdate."
   };
   return renderTemplate`${error && renderTemplate`${maybeRenderHead()}<div class="mb-5 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">${error}</div>`}${success && successText[success] && renderTemplate`<div class="mb-5 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">${successText[success]}</div>`}`;
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/components/admin/AdminAlerts.astro", void 0);
@@ -33,10 +34,11 @@ const $$AdminNav = createComponent(($$result, $$props, $$slots) => {
   const items = [
     { id: "dashboard", label: "Dashboard", href: withBase("admin") },
     { id: "content", label: "Content", href: withBase("admin/content") },
+    { id: "pricelist", label: "Pricelist", href: withBase("admin/pricelist") },
     { id: "collections", label: "Collections", href: withBase("admin/collections") },
     { id: "posts", label: "Posts", href: withBase("admin/posts") }
   ];
-  return renderTemplate`${maybeRenderHead()}<aside class="rounded-md border border-zinc-200 bg-white p-2 shadow-sm lg:sticky lg:top-24 lg:self-start"> <nav class="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-1"> ${items.map((item) => renderTemplate`<a${addAttribute(item.href, "href")}${addAttribute(`rounded-md px-3 py-3 text-center text-sm font-medium transition lg:text-left ${active === item.id ? "bg-zinc-950 text-white" : "text-zinc-700 hover:bg-zinc-100"}`, "class")}> ${item.label} </a>`)} </nav> </aside>`;
+  return renderTemplate`${maybeRenderHead()}<aside class="rounded-md border border-zinc-200 bg-white p-2 shadow-sm lg:sticky lg:top-24 lg:self-start"> <nav class="grid grid-cols-2 gap-2 sm:grid-cols-5 lg:grid-cols-1"> ${items.map((item) => renderTemplate`<a${addAttribute(item.href, "href")}${addAttribute(`rounded-md px-3 py-3 text-center text-sm font-medium transition lg:text-left ${active === item.id ? "bg-zinc-950 text-white" : "text-zinc-700 hover:bg-zinc-100"}`, "class")}> ${item.label} </a>`)} </nav> </aside>`;
 }, "/home/runner/work/rivaldy-portofolio/rivaldy-portofolio/src/components/admin/AdminNav.astro", void 0);
 
 export { $$AdminHeader as $, $$AdminAlerts as a, $$AdminNav as b };
